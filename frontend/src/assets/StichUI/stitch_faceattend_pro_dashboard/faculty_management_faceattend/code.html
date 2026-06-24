@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Faculty Management - FaceAttend</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-low": "#eff4ff",
+                    "secondary-fixed-dim": "#bec6e0",
+                    "secondary-fixed": "#dae2fd",
+                    "inverse-surface": "#213145",
+                    "surface-container": "#e5eeff",
+                    "on-tertiary-fixed": "#002109",
+                    "on-secondary-fixed": "#131b2e",
+                    "inverse-primary": "#b4c5ff",
+                    "surface-tint": "#0053db",
+                    "error-container": "#ffdad6",
+                    "error": "#ba1a1a",
+                    "surface-variant": "#d3e4fe",
+                    "primary-container": "#2563eb",
+                    "on-tertiary-fixed-variant": "#005320",
+                    "on-secondary-container": "#5c647a",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-fixed-variant": "#3f465c",
+                    "primary-fixed": "#dbe1ff",
+                    "on-primary-fixed": "#00174b",
+                    "background": "#f8f9ff",
+                    "outline-variant": "#c3c6d7",
+                    "surface-container-high": "#dce9ff",
+                    "outline": "#737686",
+                    "on-primary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-background": "#0b1c30",
+                    "tertiary-container": "#007f36",
+                    "on-error-container": "#93000a",
+                    "tertiary": "#006329",
+                    "surface-bright": "#f8f9ff",
+                    "surface": "#f8f9ff",
+                    "primary": "#004ac6",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-container": "#c7ffca",
+                    "tertiary-fixed": "#7ffc97",
+                    "secondary-container": "#dae2fd",
+                    "on-surface-variant": "#434655",
+                    "on-primary-container": "#eeefff",
+                    "secondary": "#565e74",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "inverse-on-surface": "#eaf1ff",
+                    "on-surface": "#0b1c30",
+                    "surface-dim": "#cbdbf5",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed-dim": "#62df7d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sidebar-width": "280px",
+                    "section-gap": "2rem",
+                    "gutter": "1.5rem",
+                    "container-max": "1440px",
+                    "card-padding": "1.5rem",
+                    "sidebar-collapsed": "80px",
+                    "component-padding": "1rem"
+            },
+            "fontFamily": {
+                    "label-sm": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-sm": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "body-lg": ["Inter"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-nav-indicator {
+            box-shadow: inset 4px 0 0 0 #004ac6;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(226, 232, 240, 1);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- Side Navigation Bar -->
+<aside class="fixed left-0 top-0 h-screen w-sidebar-width bg-surface-container-lowest border-r border-outline-variant z-50 flex flex-col py-4 space-y-2">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" data-icon="face">face</span>
+</div>
+<div>
+<h1 class="text-headline-sm font-headline-sm font-bold text-primary">FaceAttend</h1>
+<p class="text-label-sm font-label-sm text-outline">Institutional Admin</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Nav Items mapped from JSON -->
+<a class="text-on-surface-variant flex items-center px-6 py-3 hover:bg-surface-container-low transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-6 py-3 hover:bg-surface-container-low transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="face">face</span>
+<span class="font-label-md text-label-md">Face Recognition</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-6 py-3 hover:bg-surface-container-low transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="school">school</span>
+<span class="font-label-md text-label-md">Students</span>
+</a>
+<a class="bg-primary/10 text-primary border-l-4 border-primary font-bold flex items-center px-6 py-3 transition-all" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="supervisor_account" style="font-variation-settings: 'FILL' 1;">supervisor_account</span>
+<span class="font-label-md text-label-md">Faculty</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-6 py-3 hover:bg-surface-container-low transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="menu_book">menu_book</span>
+<span class="font-label-md text-label-md">Classes</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-6 py-3 hover:bg-surface-container-low transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="event_available">event_available</span>
+<span class="font-label-md text-label-md">Attendance</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-6 py-3 hover:bg-surface-container-low transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="assessment">assessment</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-6 py-3 hover:bg-surface-container-low transition-all active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<div class="p-4 bg-surface-variant/30 rounded-xl">
+<p class="text-label-sm text-on-surface-variant mb-2">Storage Usage</p>
+<div class="w-full bg-outline-variant rounded-full h-1.5 mb-2">
+<div class="bg-primary h-1.5 rounded-full" style="width: 65%"></div>
+</div>
+<p class="text-label-sm font-bold text-primary">6.5 GB of 10 GB</p>
+</div>
+</div>
+</aside>
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 right-0 left-sidebar-width h-16 bg-surface border-b border-outline-variant z-40 flex items-center justify-between px-gutter shadow-sm">
+<div class="flex items-center">
+<h2 class="text-headline-sm font-headline-sm font-bold text-primary">Faculty Management</h2>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-outline" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-full text-label-md focus:outline-none focus:ring-2 focus:ring-primary w-64 transition-all" placeholder="Search for faculty..." type="text"/>
+</div>
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container-low text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container-low text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="dark_mode">dark_mode</span>
+</button>
+<div class="h-8 w-px bg-outline-variant"></div>
+<div class="flex items-center gap-3 cursor-pointer hover:bg-surface-container-low p-1 pr-3 rounded-full transition-colors">
+<img class="w-8 h-8 rounded-full border border-primary/20" data-alt="A professional headshot of a university administrator with a friendly expression, wearing corporate attire, set against a blurred institutional office background. Soft, clean light-mode studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-d-nU3odS7zlV_f1TDYvtD_aURgUMwwGwO2wp0Rt9bJ9MvN-SBivade7j7YNfHXckjbsBwjo9kATAO6V-63IRtiXNRMM08OWHd00rNsuRH21dWzmsyACdFbjN3wT39JOSsob6bbOrO2Fn_faHwuJeBkbSxUbPg_YtT9SanNj2_m1y0tao0QRDSMYrwdQUolRu6IRVmpwUZIZ5iblXFFuE6Ds7-PyGA6L0NV10clot-lWBlYPGuM8D2gAEIMb1zqgg1aF7RXF6008"/>
+<span class="text-label-md font-label-md text-on-surface">Dr. Admin</span>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-24 pb-12 pl-sidebar-width min-h-screen">
+<div class="max-w-container-max mx-auto px-gutter">
+<!-- Hero / Summary Stats Section -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-section-gap">
+<!-- Total Faculty -->
+<div class="glass-card p-card-padding rounded-xl shadow-sm flex flex-col justify-between group hover:shadow-md transition-all">
+<div class="flex justify-between items-start">
+<div class="w-12 h-12 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+</div>
+<span class="text-tertiary font-label-sm flex items-center">
+<span class="material-symbols-outlined text-sm mr-1" data-icon="trending_up">trending_up</span> +3%
+                        </span>
+</div>
+<div class="mt-4">
+<h3 class="text-label-md text-on-surface-variant">Total Faculty</h3>
+<p class="text-display-lg font-display-lg text-on-surface">124</p>
+</div>
+</div>
+<!-- Active Faculty -->
+<div class="glass-card p-card-padding rounded-xl shadow-sm flex flex-col justify-between group hover:shadow-md transition-all">
+<div class="flex justify-between items-start">
+<div class="w-12 h-12 rounded-lg bg-tertiary-fixed flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined" data-icon="person_check" style="font-variation-settings: 'FILL' 1;">person_check</span>
+</div>
+<span class="text-label-sm text-outline">Currently Teaching</span>
+</div>
+<div class="mt-4">
+<h3 class="text-label-md text-on-surface-variant">Active Faculty</h3>
+<p class="text-display-lg font-display-lg text-on-surface">118</p>
+</div>
+</div>
+<!-- Departments -->
+<div class="glass-card p-card-padding rounded-xl shadow-sm flex flex-col justify-between group hover:shadow-md transition-all">
+<div class="flex justify-between items-start">
+<div class="w-12 h-12 rounded-lg bg-secondary-fixed flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="domain">domain</span>
+</div>
+</div>
+<div class="mt-4">
+<h3 class="text-label-md text-on-surface-variant">Departments</h3>
+<p class="text-display-lg font-display-lg text-on-surface">12</p>
+</div>
+</div>
+<!-- Subjects -->
+<div class="glass-card p-card-padding rounded-xl shadow-sm flex flex-col justify-between group hover:shadow-md transition-all">
+<div class="flex justify-between items-start">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="book_5">book_5</span>
+</div>
+</div>
+<div class="mt-4">
+<h3 class="text-label-md text-on-surface-variant">Subjects</h3>
+<p class="text-display-lg font-display-lg text-on-surface">48</p>
+</div>
+</div>
+</div>
+<!-- Action Bar -->
+<div class="bg-surface-container-lowest border border-outline-variant p-4 rounded-xl mb-6 flex flex-wrap items-center justify-between gap-4 shadow-sm">
+<div class="flex items-center gap-3 flex-1 min-w-[300px]">
+<div class="relative flex-1 max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-sm" data-icon="search">search</span>
+<input class="w-full pl-10 pr-4 py-2 border border-outline-variant rounded-lg text-label-md focus:ring-primary focus:border-primary" placeholder="Search by name, ID or email..." type="text"/>
+</div>
+<select class="bg-surface border border-outline-variant rounded-lg px-4 py-2 text-label-md focus:ring-primary focus:border-primary">
+<option>All Departments</option>
+<option>Computer Science</option>
+<option>Mathematics</option>
+<option>Physics</option>
+<option>Literature</option>
+</select>
+<select class="bg-surface border border-outline-variant rounded-lg px-4 py-2 text-label-md focus:ring-primary focus:border-primary">
+<option>Status: All</option>
+<option>Status: Active</option>
+<option>Status: On Leave</option>
+<option>Status: Resigned</option>
+</select>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-lg text-label-md font-bold text-on-surface hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined" data-icon="file_download">file_download</span> Export
+                    </button>
+<button class="flex items-center gap-2 px-6 py-2 bg-primary text-on-primary rounded-lg text-label-md font-bold shadow-md hover:bg-primary-container active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="person_add">person_add</span> Add Faculty
+                    </button>
+</div>
+</div>
+<!-- Data Table -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="px-6 py-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Profile</th>
+<th class="px-6 py-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Name &amp; ID</th>
+<th class="px-6 py-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Email</th>
+<th class="px-6 py-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Department</th>
+<th class="px-6 py-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Subject</th>
+<th class="px-6 py-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Phone</th>
+<th class="px-6 py-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 font-label-sm text-label-sm text-outline uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Table Row 1 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-6 py-4">
+<img class="w-10 h-10 rounded-full border border-outline-variant object-cover" data-alt="A professional headshot of a middle-aged male professor with glasses and a friendly demeanor, wearing a navy blue blazer. Bright academic office background with soft daylight. Modern corporate photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAug_0_XgIabNdvNH181SAjJiACrsRhuQrjPfK9ORfj7OwsbJ5g2qHJK7Z1hg2oKRkc5OXlFyc_p6wrhbjJlZWMcmXjltSntfyJkOXeMCWppnE7lSEGXhboK3JaeltIFCKOEdtXcNwPgHHcEu3Ih3iw9ws131SQWdYYBMTkiITuGEgrhmYKI3VTcLl3BkjVlIBl1G8_JriCnXvjDrcoXAHCIcEPzKMk6QDAOWrNMBCRyNbTczg2veNCDg8qPe-fR3Joe5CjVUbHu8k"/>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-label-md font-bold text-on-surface">Dr. Julian Vance</span>
+<span class="text-label-sm text-outline">FAC-2024-001</span>
+</div>
+</td>
+<td class="px-6 py-4 text-label-md text-on-surface-variant">j.vance@university.edu</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-secondary-fixed text-on-secondary-fixed rounded-full text-label-sm">Computer Science</span>
+</td>
+<td class="px-6 py-4 text-label-md text-on-surface-variant">AI &amp; Machine Learning</td>
+<td class="px-6 py-4 text-label-md text-on-surface-variant">+1 (555) 012-3456</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-1.5 text-tertiary">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="text-label-sm font-bold">Active</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-2 hover:bg-surface-container-high rounded-full text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+<button class="p-2 hover:bg-surface-container-high rounded-full text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Table Row 2 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-6 py-4">
+<img class="w-10 h-10 rounded-full border border-outline-variant object-cover" data-alt="A high-quality portrait of a female associate professor in her late 30s, smiling confidently. She is wearing a professional charcoal grey dress. The lighting is warm and cinematic, set against a modern library background. Corporate professional aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDqzXSn9VlWD71m7tfgSd2534RClvq9_Jep2oipPJpYmNxURUEpbZ1taLMB3O6dD2ZlobQX8lScq2podr5sv35Wcz4DByERMVYJvd5oFoF5fqswZYmYVZEAgcvGr1N8J1vsabuKHUOvTCp_AyYo_B0IuiPTO0Ph81fiahYFbsyhizEN9sHQ-oSQ-P73cVyqLor7hKSjOCOCmFfbSCTbOLw3uSf25nZGBG10qZBX0E1DCgJ3iFaqykK5OSfyB45EPeGYoxOcDFEM28"/>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-label-md font-bold text-on-surface">Dr. Elena Rodriguez</span>
+<span class="text-label-sm text-outline">FAC-2024-009</span>
+</div>
+</td>
+<td class="px-6 py-4 text-label-md text-on-surface-variant">e.rodriguez@university.edu</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-surface-variant text-on-surface-variant rounded-full text-label-sm">Mathematics</span>
+</td>
+<td class="px-6 py-4 text-label-md text-on-surface-variant">Quantum Computing</td>
+<td class="px-6 py-4 text-label-md text-on-surface-variant">+1 (555) 012-7890</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-1.5 text-tertiary">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="text-label-sm font-bold">Active</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-2 hover:bg-surface-container-high rounded-full text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+<button class="p-2 hover:bg-surface-container-high rounded-full text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Table Row 3 (On Leave) -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-6 py-4">
+<img class="w-10 h-10 rounded-full border border-outline-variant object-cover" data-alt="A professional studio portrait of a senior male professor with a silver beard, wearing a tweed jacket and a turtleneck. He has a thoughtful, experienced expression. Bright, airy light-mode background. Institutional elegance and authority." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaaij7yUoc7H-y-_adUMoYOWtDDRBe2wZToKrcjWgAvRpyCD6Kts_uKxdhBhC8n8xjPcwwOXvVxGpNGOF4XNGt4dpU0JaIu8G5mDPDYh-zejv5lZwod-NItHMrwyPE7-hOgqB1U_bI-pjLqEdk1OTtK3Pp37_3_UbXioDGybkO2XhaUalXw56jDifJihI3A9fOGX-z0TV_GlCEnLlkmI7nmWiAuaYokT-rvVtpDNUXIvekz5QxGPSeoAwAAg-DoDEiyhrXnx8RFq4"/>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-label-md font-bold text-on-surface">Prof. Marcus Thorne</span>
+<span class="text-label-sm text-outline">FAC-2022-045</span>
+</div>
+</td>
+<td class="px-6 py-4 text-label-md text-on-surface-variant">m.thorne@university.edu</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-secondary-fixed text-on-secondary-fixed rounded-full text-label-sm">Physics</span>
+</td>
+<td class="px-6 py-4 text-label-md text-on-surface-variant">Astrophysics</td>
+<td class="px-6 py-4 text-label-md text-on-surface-variant">+1 (555) 012-1122</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-1.5 text-secondary">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="text-label-sm font-bold">On Leave</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-2 hover:bg-surface-container-high rounded-full text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+<button class="p-2 hover:bg-surface-container-high rounded-full text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Table Row 4 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-6 py-4">
+<img class="w-10 h-10 rounded-full border border-outline-variant object-cover" data-alt="A portrait of a young female lecturer with a bright, energetic smile, wearing a cream-colored professional blouse. Professional office setting with bookshelves in the background. Clean, modern, high-clarity institutional visual style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3BQRiteRJnSJsxgP8w-cDLE9NXDaXSMPH0R4gcVoCTH0eGnXC1sYs7RbJWKBzm95IlK47OgJOS4qgrGQeapZmIcYN4rd00oe4uW5qrSy-bo-KhLZ7MGo3nW2yZUB3npeYGvpMWiPT02KwckkCI_yS9doLkuxzCO5LoAgUZ4NUpEtNkor4RujWft-xKbMxPAteS0QPMcnTIqBJ06gRNAyKNigDCEAYflfAhJsHfOzpXMHuUmz19fFHTZrGNLT4jNLw3gjn9HfaUR0"/>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-label-md font-bold text-on-surface">Sarah Jenkins</span>
+<span class="text-label-sm text-outline">FAC-2024-032</span>
+</div>
+</td>
+<td class="px-6 py-4 text-label-md text-on-surface-variant">s.jenkins@university.edu</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-surface-variant text-on-surface-variant rounded-full text-label-sm">Literature</span>
+</td>
+<td class="px-6 py-4 text-label-md text-on-surface-variant">Modern Poetry</td>
+<td class="px-6 py-4 text-label-md text-on-surface-variant">+1 (555) 012-3344</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-1.5 text-tertiary">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="text-label-sm font-bold">Active</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-2 hover:bg-surface-container-high rounded-full text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+<button class="p-2 hover:bg-surface-container-high rounded-full text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-6 py-4 bg-surface-container-low border-t border-outline-variant flex items-center justify-between">
+<span class="text-label-sm text-on-surface-variant">Showing 1 to 10 of 124 entries</span>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1 border border-outline-variant rounded hover:bg-surface-container transition-colors text-label-sm text-on-surface-variant disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-sm align-middle" data-icon="chevron_left">chevron_left</span> Previous
+                        </button>
+<button class="px-3 py-1 bg-primary text-on-primary rounded text-label-sm font-bold">1</button>
+<button class="px-3 py-1 hover:bg-surface-container rounded text-label-sm text-on-surface-variant">2</button>
+<button class="px-3 py-1 hover:bg-surface-container rounded text-label-sm text-on-surface-variant">3</button>
+<span class="text-label-sm">...</span>
+<button class="px-3 py-1 hover:bg-surface-container rounded text-label-sm text-on-surface-variant">13</button>
+<button class="px-3 py-1 border border-outline-variant rounded hover:bg-surface-container transition-colors text-label-sm text-on-surface-variant">
+                            Next <span class="material-symbols-outlined text-sm align-middle" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button (FAB) Suppressed as per instructions for Details/Management screens -->
+<script>
+        // Micro-interactions and animations
+        document.querySelectorAll('tr').forEach(row => {
+            row.addEventListener('click', function(e) {
+                if(!e.target.closest('button')) {
+                    // Logic for row selection or navigation
+                    console.log('Row clicked');
+                }
+            });
+        });
+
+        // Simple Search Filter Simulation
+        const searchInput = document.querySelector('input[placeholder="Search by name, ID or email..."]');
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(term) ? '' : 'none';
+            });
+        });
+    </script>
+</body></html>

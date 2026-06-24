@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Settings - FaceAttend</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(226, 232, 240, 1);
+        }
+        /* Custom range slider styling */
+        input[type='range'] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            cursor: pointer;
+        }
+        input[type='range']::-webkit-slider-runnable-track {
+            background: #e5eeff;
+            height: 0.5rem;
+            border-radius: 9999px;
+        }
+        input[type='range']::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            margin-top: -4px;
+            background-color: #004ac6;
+            height: 1rem;
+            width: 1rem;
+            border-radius: 9999px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#eff4ff",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "secondary-fixed": "#dae2fd",
+                        "inverse-surface": "#213145",
+                        "surface-container": "#e5eeff",
+                        "on-tertiary-fixed": "#002109",
+                        "on-secondary-fixed": "#131b2e",
+                        "inverse-primary": "#b4c5ff",
+                        "surface-tint": "#0053db",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#d3e4fe",
+                        "primary-container": "#2563eb",
+                        "on-tertiary-fixed-variant": "#005320",
+                        "on-secondary-container": "#5c647a",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "primary-fixed": "#dbe1ff",
+                        "on-primary-fixed": "#00174b",
+                        "background": "#f8f9ff",
+                        "outline-variant": "#c3c6d7",
+                        "surface-container-high": "#dce9ff",
+                        "outline": "#737686",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-background": "#0b1c30",
+                        "tertiary-container": "#007f36",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#006329",
+                        "surface-bright": "#f8f9ff",
+                        "surface": "#f8f9ff",
+                        "primary": "#004ac6",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-container": "#c7ffca",
+                        "tertiary-fixed": "#7ffc97",
+                        "secondary-container": "#dae2fd",
+                        "on-surface-variant": "#434655",
+                        "on-primary-container": "#eeefff",
+                        "secondary": "#565e74",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-surface": "#0b1c30",
+                        "surface-dim": "#cbdbf5",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed-dim": "#62df7d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sidebar-width": "280px",
+                        "section-gap": "2rem",
+                        "gutter": "1.5rem",
+                        "container-max": "1440px",
+                        "card-padding": "1.5rem",
+                        "sidebar-collapsed": "80px",
+                        "component-padding": "1rem"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 left-0 z-40 flex items-center justify-between px-gutter bg-surface border-b border-outline-variant h-16 shadow-sm">
+<div class="flex items-center gap-4">
+<span class="text-headline-md font-headline-md font-bold text-primary">FaceAttend</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-full material-symbols-outlined">notifications</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-full material-symbols-outlined">dark_mode</button>
+<div class="flex items-center gap-2 pl-4 border-l border-outline-variant">
+<div class="w-8 h-8 rounded-full bg-primary-fixed overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional high-resolution portrait of a university administrator in a modern office environment. The person is smiling warmly, conveying reliability and authority. The lighting is soft and professional, highlighting the clear, clean facial features for a biometric identification context. The background is slightly blurred with soft institutional blue tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkVgoll8IM3A2KFAfykm8Qfn-sht7JBWCRi3qsDTwKyTeviHXkWNyqvhaHnktaqKaAt-oOJjqkKLXaxWr7norDgycB77J-OvUkR42Ib7suptSQ-zKX8cAwXsCVtayr4GH8vAssAX7dDmVTGv1VGr59LbMZseN6t1sGJ4QyK2Z72e3R5pQVlvX7-F523xfHl7m-RTASaNHh8nLLq7CDzwc-0kVniz4TzOUjbcOR0utUtxFvctTtwi2Cgr92tharQy5Mgi6eCTVqxKM"/>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant hidden md:block">Institutional Admin</span>
+</div>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-screen w-sidebar-width bg-surface-container-lowest border-r border-outline-variant hidden md:flex flex-col py-4 pt-20">
+<nav class="flex flex-col h-full space-y-1">
+<a class="text-on-surface-variant flex items-center px-6 py-3 hover:bg-surface-container-low transition-all active:translate-x-1" href="#">
+<span class="material-symbols-outlined mr-4">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-6 py-3 hover:bg-surface-container-low transition-all active:translate-x-1" href="#">
+<span class="material-symbols-outlined mr-4">face</span>
+<span class="font-label-md text-label-md">Face Recognition</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-6 py-3 hover:bg-surface-container-low transition-all active:translate-x-1" href="#">
+<span class="material-symbols-outlined mr-4">school</span>
+<span class="font-label-md text-label-md">Students</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-6 py-3 hover:bg-surface-container-low transition-all active:translate-x-1" href="#">
+<span class="material-symbols-outlined mr-4">supervisor_account</span>
+<span class="font-label-md text-label-md">Faculty</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-6 py-3 hover:bg-surface-container-low transition-all active:translate-x-1" href="#">
+<span class="material-symbols-outlined mr-4">menu_book</span>
+<span class="font-label-md text-label-md">Classes</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-6 py-3 hover:bg-surface-container-low transition-all active:translate-x-1" href="#">
+<span class="material-symbols-outlined mr-4">event_available</span>
+<span class="font-label-md text-label-md">Attendance</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-6 py-3 hover:bg-surface-container-low transition-all active:translate-x-1" href="#">
+<span class="material-symbols-outlined mr-4">assessment</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+<a class="bg-primary/10 text-primary border-l-4 border-primary font-bold flex items-center px-6 py-3 transition-all active:translate-x-1" href="#">
+<span class="material-symbols-outlined mr-4">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content -->
+<main class="md:ml-sidebar-width pt-20 p-gutter pb-24 min-h-screen flex flex-col items-center">
+<div class="w-full max-w-container-max flex flex-col gap-8">
+<!-- Page Header -->
+<div class="flex flex-col gap-1">
+<h1 class="font-display-lg text-display-lg text-primary">System Settings</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Configure institutional parameters and administrative preferences.</p>
+</div>
+<!-- Bento Grid Layout for Settings Sections -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Left Column: Profile & Security -->
+<div class="lg:col-span-8 flex flex-col gap-6">
+<!-- Profile Section -->
+<section class="glass-card rounded-xl p-card-padding shadow-sm">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">person</span>
+<h2 class="font-headline-sm text-headline-sm">Administrator Profile</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Full Name</label>
+<input class="bg-surface border border-outline-variant rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-transparent outline-none" type="text" value="Dr. Sarah Jenkins"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Email Address</label>
+<input class="bg-surface border border-outline-variant rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-transparent outline-none" type="email" value="s.jenkins@faceattend.edu"/>
+</div>
+<div class="flex flex-col gap-2 md:col-span-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Department</label>
+<input class="bg-surface border border-outline-variant rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-transparent outline-none" type="text" value="Institutional Technology &amp; Security"/>
+</div>
+</div>
+</section>
+<!-- Face Recognition & Accuracy -->
+<section class="glass-card rounded-xl p-card-padding shadow-sm">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">phonelink_setup</span>
+<h2 class="font-headline-sm text-headline-sm">Face Recognition Algorithm</h2>
+</div>
+<div class="flex flex-col gap-8">
+<div class="flex flex-col gap-4">
+<div class="flex justify-between items-center">
+<label class="font-label-md text-label-md text-on-surface-variant">Confidence Threshold</label>
+<span class="bg-primary-container text-on-primary-container px-3 py-1 rounded-full text-label-sm font-bold" id="threshold-val">85%</span>
+</div>
+<input class="w-full" max="100" min="50" oninput="document.getElementById('threshold-val').innerText = this.value + '%'" type="range" value="85"/>
+<p class="text-body-sm font-body-sm text-outline">Higher thresholds reduce false positives but may require better lighting.</p>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container rounded-lg">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md">Auto-Mark Attendance</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Automatically record entry upon face match</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-outline rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+</section>
+<!-- Camera & Hardware -->
+<section class="glass-card rounded-xl p-card-padding shadow-sm">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">videocam</span>
+<h2 class="font-headline-sm text-headline-sm">Camera Calibration</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="relative rounded-lg overflow-hidden bg-on-background aspect-video flex items-center justify-center">
+<div class="absolute inset-0 opacity-40">
+<img class="w-full h-full object-cover" data-alt="A dark-mode camera preview interface with a subtle scanning laser line moving vertically. The frame shows a high-tech biometric grid overlay on a dark background, representing the computer vision system active state. The lighting is low and futuristic with hints of electric blue." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDw7KArccelGFtOQ-yuREuuZYw1Q0IXZBiS3hgXSjOMVpj_VnFWN5WSJG-uByDa5Z-6RFwr1BDv49thGSKl4buSHPnOXlN4wrNm_j7enanObqpojQLETumEnr_jAkkUHdnuYtafbzvlRLvYw8EyKNIN8UYme5S4rljOclVUOiAUDfjhKxRdyEZnnyW3lPHJ54-yzZe5YuQkBYU-_iUv2dqCXxFw4pw2PAQGN_UPMQwSVqqwwtis-VknpEV-LeshlfpR6G_3bLJfLIQ"/>
+</div>
+<div class="z-10 flex flex-col items-center gap-2 text-surface">
+<span class="material-symbols-outlined animate-pulse text-4xl">camera_front</span>
+<span class="text-label-sm font-label-sm">Primary Terminal Camera Active</span>
+</div>
+<div class="absolute bottom-4 left-4 right-4 bg-black/60 backdrop-blur-md p-2 rounded text-surface text-[10px] uppercase tracking-widest font-bold text-center">
+                                    Status: Optimized for 1080p
+                                </div>
+</div>
+<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Input Source</label>
+<select class="bg-surface border border-outline-variant rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary outline-none">
+<option>Integrated HD Terminal 01</option>
+<option>External USB Camera Alpha</option>
+<option>Network IP Camera 402</option>
+</select>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Capture Delay</label>
+<select class="bg-surface border border-outline-variant rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary outline-none">
+<option>Instant (0.1s)</option>
+<option selected="">Standard (0.5s)</option>
+<option>Steady-Only (1.5s)</option>
+</select>
+</div>
+<button class="mt-2 text-primary font-label-md text-label-md flex items-center gap-2 hover:underline">
+<span class="material-symbols-outlined text-sm">refresh</span>
+                                    Re-calibrate sensors
+                                </button>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Settings, Timing & Notifications -->
+<div class="lg:col-span-4 flex flex-col gap-6">
+<!-- Password & Security -->
+<section class="glass-card rounded-xl p-card-padding shadow-sm">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">lock</span>
+<h2 class="font-headline-sm text-headline-sm">Security</h2>
+</div>
+<div class="flex flex-col gap-4">
+<button class="w-full bg-secondary-container text-on-secondary-container py-2 rounded-lg font-label-md text-label-md hover:bg-secondary-fixed transition-colors">
+                                Change Password
+                            </button>
+<button class="w-full border border-outline-variant py-2 rounded-lg font-label-md text-label-md hover:bg-surface-container transition-colors">
+                                Enable Two-Factor (2FA)
+                            </button>
+<div class="mt-4 pt-4 border-t border-outline-variant">
+<span class="text-body-sm font-body-sm text-outline">Last login: 2 hours ago from Chrome (macOS)</span>
+</div>
+</div>
+</section>
+<!-- Attendance Timing -->
+<section class="glass-card rounded-xl p-card-padding shadow-sm">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">schedule</span>
+<h2 class="font-headline-sm text-headline-sm">Attendance Timing</h2>
+</div>
+<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Class Grace Period</label>
+<div class="flex items-center gap-2">
+<input class="w-20 bg-surface border border-outline-variant rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary outline-none" type="number" value="15"/>
+<span class="text-body-md font-body-md">minutes</span>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Log Interval</label>
+<select class="bg-surface border border-outline-variant rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary outline-none">
+<option>Every 5 mins</option>
+<option selected="">Once per session</option>
+<option>Start &amp; End only</option>
+</select>
+</div>
+</div>
+</section>
+<!-- Notifications -->
+<section class="glass-card rounded-xl p-card-padding shadow-sm">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">notifications_active</span>
+<h2 class="font-headline-sm text-headline-sm">Notifications</h2>
+</div>
+<div class="flex flex-col gap-3">
+<label class="flex items-center gap-3 cursor-pointer">
+<input checked="" class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+<span class="font-label-md text-label-md">System alerts (Critical)</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer">
+<input checked="" class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+<span class="font-label-md text-label-md">Daily attendance summaries</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+<span class="font-label-md text-label-md">New student registration</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+<span class="font-label-md text-label-md">Weekly insight reports</span>
+</label>
+</div>
+</section>
+</div>
+</div>
+<!-- Action Bar -->
+<div class="sticky bottom-8 z-30 w-full flex justify-end gap-4 p-4 bg-surface/80 backdrop-blur-xl border border-outline-variant rounded-2xl shadow-xl">
+<button class="px-8 py-3 rounded-xl border border-outline-variant font-label-md text-label-md text-on-surface-variant hover:bg-surface-container transition-all active:scale-95">
+                    Cancel
+                </button>
+<button class="px-10 py-3 rounded-xl bg-primary text-on-primary font-label-md text-label-md font-bold shadow-lg shadow-primary/20 hover:bg-primary-container transition-all active:scale-95">
+                    Save Changes
+                </button>
+</div>
+</div>
+</main>
+<!-- Mobile Navigation (Visible on mobile only) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-surface border-t border-outline-variant flex items-center justify-around px-4 z-50">
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-label-sm">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">face</span>
+<span class="text-[10px] font-label-sm">Scan</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">school</span>
+<span class="text-[10px] font-label-sm">Students</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="text-[10px] font-label-sm font-bold">Settings</span>
+</button>
+</nav>
+<script>
+        // Micro-interaction for feedback
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                if(this.textContent.trim() === 'Save Changes') {
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Saving...';
+                    this.disabled = true;
+                    setTimeout(() => {
+                        this.innerHTML = '<span class="material-symbols-outlined">check</span> Saved!';
+                        this.classList.remove('bg-primary');
+                        this.classList.add('bg-tertiary-container', 'text-on-tertiary-container');
+                        setTimeout(() => {
+                            this.innerHTML = originalText;
+                            this.classList.add('bg-primary');
+                            this.classList.remove('bg-tertiary-container', 'text-on-tertiary-container');
+                            this.disabled = false;
+                        }, 2000);
+                    }, 1200);
+                }
+            });
+        });
+    </script>
+</body></html>

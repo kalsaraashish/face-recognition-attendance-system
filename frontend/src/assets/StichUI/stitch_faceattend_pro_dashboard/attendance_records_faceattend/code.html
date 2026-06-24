@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Attendance Records - FaceAttend</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-low": "#eff4ff",
+                    "secondary-fixed-dim": "#bec6e0",
+                    "secondary-fixed": "#dae2fd",
+                    "inverse-surface": "#213145",
+                    "surface-container": "#e5eeff",
+                    "on-tertiary-fixed": "#002109",
+                    "on-secondary-fixed": "#131b2e",
+                    "inverse-primary": "#b4c5ff",
+                    "surface-tint": "#0053db",
+                    "error-container": "#ffdad6",
+                    "error": "#ba1a1a",
+                    "surface-variant": "#d3e4fe",
+                    "primary-container": "#2563eb",
+                    "on-tertiary-fixed-variant": "#005320",
+                    "on-secondary-container": "#5c647a",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-fixed-variant": "#3f465c",
+                    "primary-fixed": "#dbe1ff",
+                    "on-primary-fixed": "#00174b",
+                    "background": "#f8f9ff",
+                    "outline-variant": "#c3c6d7",
+                    "surface-container-high": "#dce9ff",
+                    "outline": "#737686",
+                    "on-primary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-background": "#0b1c30",
+                    "tertiary-container": "#007f36",
+                    "on-error-container": "#93000a",
+                    "tertiary": "#006329",
+                    "surface-bright": "#f8f9ff",
+                    "surface": "#f8f9ff",
+                    "primary": "#004ac6",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-container": "#c7ffca",
+                    "tertiary-fixed": "#7ffc97",
+                    "secondary-container": "#dae2fd",
+                    "on-surface-variant": "#434655",
+                    "on-primary-container": "#eeefff",
+                    "secondary": "#565e74",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "inverse-on-surface": "#eaf1ff",
+                    "on-surface": "#0b1c30",
+                    "surface-dim": "#cbdbf5",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed-dim": "#62df7d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sidebar-width": "280px",
+                    "section-gap": "2rem",
+                    "gutter": "1.5rem",
+                    "container-max": "1440px",
+                    "card-padding": "1.5rem",
+                    "sidebar-collapsed": "80px",
+                    "component-padding": "1rem"
+            },
+            "fontFamily": {
+                    "label-sm": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-sm": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .sidebar-scroll::-webkit-scrollbar { width: 4px; }
+        .sidebar-scroll::-webkit-scrollbar-track { background: transparent; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- Side Navigation Bar -->
+<aside class="fixed left-0 top-0 h-screen w-sidebar-width bg-surface-container-lowest border-r border-outline-variant shadow-sm z-50 flex flex-col py-4 space-y-2">
+<div class="px-6 mb-8 flex items-center space-x-3">
+<div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary text-headline-sm" style="font-variation-settings: 'FILL' 1;">face</span>
+</div>
+<div>
+<h1 class="text-headline-md font-headline-md font-bold text-primary">FaceAttend</h1>
+<p class="text-label-sm text-on-surface-variant">Institutional Admin</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1 px-3 sidebar-scroll overflow-y-auto">
+<a class="text-on-surface-variant flex items-center px-4 py-3 hover:bg-surface-container-low transition-all active:translate-x-1 duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined mr-3">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-4 py-3 hover:bg-surface-container-low transition-all active:translate-x-1 duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined mr-3">face</span>
+<span class="font-label-md text-label-md">Face Recognition</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-4 py-3 hover:bg-surface-container-low transition-all active:translate-x-1 duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined mr-3">school</span>
+<span class="font-label-md text-label-md">Students</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-4 py-3 hover:bg-surface-container-low transition-all active:translate-x-1 duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined mr-3">supervisor_account</span>
+<span class="font-label-md text-label-md">Faculty</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-4 py-3 hover:bg-surface-container-low transition-all active:translate-x-1 duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined mr-3">menu_book</span>
+<span class="font-label-md text-label-md">Classes</span>
+</a>
+<a class="bg-primary/10 text-primary border-l-4 border-primary font-bold flex items-center px-4 py-3 active:translate-x-1 duration-200 rounded-r-lg" href="#">
+<span class="material-symbols-outlined mr-3" style="font-variation-settings: 'FILL' 1;">event_available</span>
+<span class="font-label-md text-label-md">Attendance</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-4 py-3 hover:bg-surface-container-low transition-all active:translate-x-1 duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined mr-3">assessment</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-4 py-3 hover:bg-surface-container-low transition-all active:translate-x-1 duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined mr-3">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<div class="px-3 pt-4 border-t border-outline-variant">
+<div class="flex items-center p-3 rounded-xl bg-surface-container">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex-shrink-0 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Professional portrait of a high-level academic administrator in a modern office. The lighting is crisp and bright, highlighting a confident expression. The aesthetic is clean and professional, using a primary blue and white color scheme to match the institutional brand identity of the FaceAttend software." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-guzI193g-whhBrd0SjqJn40bl3qryuUXxYBbW0vP_UG8Qvvt3g7JEOwo1o07DzoFrBjsa5er0sEgJh5kwIE9yI8cXBrkKx-aVAtFaEouwRo3BTU516022bQDAD2lW4JJNdbnv9STa4jb2XSX89LeLlWqxt9wvg1Y97gF61krjk5G4L8Jr0d5rFY7SuCChHt2Bhx2VvF_O6120SZbWDDe_xotqojm4maJManjsTDXtr4UybGz9EOIv2PLDUA40ljLOmHmiRPXOls"/>
+</div>
+<div class="ml-3 overflow-hidden">
+<p class="font-label-md text-label-md text-on-surface truncate">Dr. Sarah Jenkins</p>
+<p class="text-xs text-on-surface-variant">System Admin</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-sidebar-width min-h-screen flex flex-col">
+<!-- Top Navigation Bar -->
+<header class="h-16 bg-surface border-b border-outline-variant shadow-sm px-gutter flex items-center justify-between sticky top-0 z-40">
+<div class="flex items-center flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-full text-label-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" placeholder="Search attendance records..." type="text"/>
+</div>
+</div>
+<div class="flex items-center space-x-4">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+<div class="h-8 w-px bg-outline-variant mx-2"></div>
+<button class="flex items-center space-x-2 px-3 py-1.5 rounded-full hover:bg-surface-container-low transition-colors">
+<span class="font-label-md text-label-md">Export</span>
+<span class="material-symbols-outlined text-primary">download</span>
+</button>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="p-gutter flex-1">
+<div class="max-w-container-max mx-auto space-y-6">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Attendance Records</h2>
+<p class="text-body-md text-on-surface-variant">Manage and monitor institutional attendance logs with biometric verification details.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-lg font-label-md text-on-surface hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined text-[20px]">inventory</span>
+                            Export CSV
+                        </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg font-label-md hover:bg-primary-container shadow-sm transition-all active:scale-95">
+<span class="material-symbols-outlined text-[20px]">picture_as_pdf</span>
+                            Download PDF
+                        </button>
+</div>
+</div>
+<!-- Filters Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-surface-container-lowest p-card-padding rounded-xl border border-outline-variant shadow-sm">
+<div class="space-y-1.5">
+<label class="text-label-sm text-outline flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span> Date Range
+                        </label>
+<div class="relative">
+<input class="w-full p-2.5 bg-surface-container-low border border-outline-variant rounded-lg text-label-md focus:ring-2 focus:ring-primary/20" type="date"/>
+</div>
+</div>
+<div class="space-y-1.5">
+<label class="text-label-sm text-outline flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">person</span> Student / Enrollment
+                        </label>
+<input class="w-full p-2.5 bg-surface-container-low border border-outline-variant rounded-lg text-label-md focus:ring-2 focus:ring-primary/20" placeholder="Search name or ID..." type="text"/>
+</div>
+<div class="space-y-1.5">
+<label class="text-label-sm text-outline flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">class</span> Class &amp; Subject
+                        </label>
+<select class="w-full p-2.5 bg-surface-container-low border border-outline-variant rounded-lg text-label-md focus:ring-2 focus:ring-primary/20 appearance-none">
+<option>All Subjects</option>
+<option>Computer Science 101</option>
+<option>Advanced Mathematics</option>
+<option>World History</option>
+</select>
+</div>
+<div class="space-y-1.5">
+<label class="text-label-sm text-outline flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">check_circle</span> Status
+                        </label>
+<div class="flex gap-2">
+<select class="flex-1 p-2.5 bg-surface-container-low border border-outline-variant rounded-lg text-label-md focus:ring-2 focus:ring-primary/20">
+<option>All Statuses</option>
+<option>Present</option>
+<option>Late</option>
+<option>Absent</option>
+</select>
+<button class="px-4 py-2 bg-secondary-container text-on-secondary-container rounded-lg font-label-md hover:bg-secondary-fixed-dim transition-colors">
+                                Apply
+                            </button>
+</div>
+</div>
+</div>
+<!-- Data Table Card -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="px-6 py-4 text-left font-label-sm text-outline uppercase tracking-wider">Date</th>
+<th class="px-6 py-4 text-left font-label-sm text-outline uppercase tracking-wider">Student</th>
+<th class="px-6 py-4 text-left font-label-sm text-outline uppercase tracking-wider">Enrollment No.</th>
+<th class="px-6 py-4 text-left font-label-sm text-outline uppercase tracking-wider">Subject</th>
+<th class="px-6 py-4 text-left font-label-sm text-outline uppercase tracking-wider">Check-in</th>
+<th class="px-6 py-4 text-left font-label-sm text-outline uppercase tracking-wider">Confidence</th>
+<th class="px-6 py-4 text-left font-label-sm text-outline uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 text-right font-label-sm text-outline uppercase tracking-wider">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4 whitespace-nowrap text-body-sm text-on-surface-variant">Oct 24, 2023</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center">
+<div class="h-8 w-8 rounded-full bg-primary-fixed-dim flex items-center justify-center mr-3">
+<span class="text-xs font-bold text-primary">AM</span>
+</div>
+<div class="text-body-md font-medium text-on-surface">Alex Mercer</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-body-sm text-on-surface-variant font-mono">FA-2023-0891</td>
+<td class="px-6 py-4 whitespace-nowrap text-body-sm text-on-surface-variant">Computer Science 101</td>
+<td class="px-6 py-4 whitespace-nowrap text-body-sm text-on-surface-variant">09:02 AM</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="w-16 h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-tertiary w-[98%]"></div>
+</div>
+<span class="text-xs font-bold text-tertiary">98.4%</span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-tertiary-fixed text-on-tertiary-fixed">PRESENT</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right">
+<button class="text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4 whitespace-nowrap text-body-sm text-on-surface-variant">Oct 24, 2023</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center">
+<div class="h-8 w-8 rounded-full bg-secondary-fixed flex items-center justify-center mr-3">
+<span class="text-xs font-bold text-secondary">EP</span>
+</div>
+<div class="text-body-md font-medium text-on-surface">Elena Pierce</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-body-sm text-on-surface-variant font-mono">FA-2023-0442</td>
+<td class="px-6 py-4 whitespace-nowrap text-body-sm text-on-surface-variant">Computer Science 101</td>
+<td class="px-6 py-4 whitespace-nowrap text-body-sm text-on-surface-variant">09:15 AM</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="w-16 h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary-container w-[82%]"></div>
+</div>
+<span class="text-xs font-bold text-secondary">82.1%</span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-secondary-fixed text-on-secondary-fixed">LATE</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right">
+<button class="text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4 whitespace-nowrap text-body-sm text-on-surface-variant">Oct 24, 2023</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center">
+<div class="h-8 w-8 rounded-full bg-error-container flex items-center justify-center mr-3">
+<span class="text-xs font-bold text-error">JR</span>
+</div>
+<div class="text-body-md font-medium text-on-surface">Julian Ross</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-body-sm text-on-surface-variant font-mono">FA-2023-1109</td>
+<td class="px-6 py-4 whitespace-nowrap text-body-sm text-on-surface-variant">Computer Science 101</td>
+<td class="px-6 py-4 whitespace-nowrap text-body-sm text-on-surface-variant">-- : --</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="w-16 h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-outline-variant w-[0%]"></div>
+</div>
+<span class="text-xs font-bold text-outline">0.0%</span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-error-container text-on-error-container">ABSENT</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right">
+<button class="text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4 whitespace-nowrap text-body-sm text-on-surface-variant">Oct 24, 2023</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center">
+<div class="h-8 w-8 rounded-full bg-primary-fixed-dim flex items-center justify-center mr-3">
+<span class="text-xs font-bold text-primary">SC</span>
+</div>
+<div class="text-body-md font-medium text-on-surface">Sarah Connor</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-body-sm text-on-surface-variant font-mono">FA-2023-0012</td>
+<td class="px-6 py-4 whitespace-nowrap text-body-sm text-on-surface-variant">Advanced Mathematics</td>
+<td class="px-6 py-4 whitespace-nowrap text-body-sm text-on-surface-variant">08:58 AM</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="w-16 h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-tertiary w-[99%]"></div>
+</div>
+<span class="text-xs font-bold text-tertiary">99.1%</span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-tertiary-fixed text-on-tertiary-fixed">PRESENT</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right">
+<button class="text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4 whitespace-nowrap text-body-sm text-on-surface-variant">Oct 24, 2023</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center">
+<div class="h-8 w-8 rounded-full bg-secondary-fixed flex items-center justify-center mr-3">
+<span class="text-xs font-bold text-secondary">MK</span>
+</div>
+<div class="text-body-md font-medium text-on-surface">Michael Kael</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-body-sm text-on-surface-variant font-mono">FA-2023-0982</td>
+<td class="px-6 py-4 whitespace-nowrap text-body-sm text-on-surface-variant">Advanced Mathematics</td>
+<td class="px-6 py-4 whitespace-nowrap text-body-sm text-on-surface-variant">09:05 AM</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="w-16 h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-tertiary w-[92%]"></div>
+</div>
+<span class="text-xs font-bold text-tertiary">92.7%</span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-tertiary-fixed text-on-tertiary-fixed">PRESENT</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right">
+<button class="text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-6 py-4 flex items-center justify-between border-t border-outline-variant bg-surface-container-lowest">
+<div class="text-label-md text-on-surface-variant">
+                            Showing <span class="font-bold text-on-surface">1 - 10</span> of <span class="font-bold text-on-surface">1,248</span> records
+                        </div>
+<div class="flex items-center gap-1">
+<button class="p-2 text-outline hover:bg-surface-container-low rounded-lg transition-colors disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined">first_page</span>
+</button>
+<button class="p-2 text-outline hover:bg-surface-container-low rounded-lg transition-colors disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<div class="flex items-center gap-1 px-2">
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-on-primary font-label-md">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-low text-on-surface-variant font-label-md transition-colors">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-low text-on-surface-variant font-label-md transition-colors">3</button>
+<span class="px-1 text-outline">...</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-low text-on-surface-variant font-label-md transition-colors">125</button>
+</div>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors">
+<span class="material-symbols-outlined">last_page</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Insight Cards (Optional Bento Additions) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="p-card-padding bg-surface-container-low rounded-xl border border-outline-variant flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-tertiary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-on-tertiary-container">trending_up</span>
+</div>
+<div>
+<p class="text-label-sm text-outline">Avg. Attendance Rate</p>
+<h4 class="text-headline-sm font-bold text-on-surface">94.2% <span class="text-xs text-tertiary font-normal">+1.2%</span></h4>
+</div>
+</div>
+<div class="p-card-padding bg-surface-container-low rounded-xl border border-outline-variant flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-on-secondary-container">alarm</span>
+</div>
+<div>
+<p class="text-label-sm text-outline">Tardiness Level</p>
+<h4 class="text-headline-sm font-bold text-on-surface">3.8% <span class="text-xs text-secondary font-normal">-0.5%</span></h4>
+</div>
+</div>
+<div class="p-card-padding bg-surface-container-low rounded-xl border border-outline-variant flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary-container/20 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary">verified</span>
+</div>
+<div>
+<p class="text-label-sm text-outline">Face Match Confidence</p>
+<h4 class="text-headline-sm font-bold text-on-surface">97.9% <span class="text-xs text-primary font-normal">System Optimal</span></h4>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="py-6 px-gutter border-t border-outline-variant text-center">
+<p class="text-label-sm text-on-surface-variant">© 2023 FaceAttend Security Systems. Biometric Verification Secured. <a class="text-primary hover:underline" href="#">Privacy Policy</a></p>
+</footer>
+</main>
+<script>
+        // Micro-interaction: Active state on buttons
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.classList.add('scale-95');
+            });
+            button.addEventListener('mouseup', () => {
+                button.classList.remove('scale-95');
+            });
+            button.addEventListener('mouseleave', () => {
+                button.classList.remove('scale-95');
+            });
+        });
+    </script>
+</body></html>

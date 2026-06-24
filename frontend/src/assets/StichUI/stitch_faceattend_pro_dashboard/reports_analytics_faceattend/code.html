@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Reports &amp; Analytics | FaceAttend</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-low": "#eff4ff",
+                      "secondary-fixed-dim": "#bec6e0",
+                      "secondary-fixed": "#dae2fd",
+                      "inverse-surface": "#213145",
+                      "surface-container": "#e5eeff",
+                      "on-tertiary-fixed": "#002109",
+                      "on-secondary-fixed": "#131b2e",
+                      "inverse-primary": "#b4c5ff",
+                      "surface-tint": "#0053db",
+                      "error-container": "#ffdad6",
+                      "error": "#ba1a1a",
+                      "surface-variant": "#d3e4fe",
+                      "primary-container": "#2563eb",
+                      "on-tertiary-fixed-variant": "#005320",
+                      "on-secondary-container": "#5c647a",
+                      "on-secondary": "#ffffff",
+                      "on-secondary-fixed-variant": "#3f465c",
+                      "primary-fixed": "#dbe1ff",
+                      "on-primary-fixed": "#00174b",
+                      "background": "#f8f9ff",
+                      "outline-variant": "#c3c6d7",
+                      "surface-container-high": "#dce9ff",
+                      "outline": "#737686",
+                      "on-primary": "#ffffff",
+                      "on-error": "#ffffff",
+                      "surface-container-highest": "#d3e4fe",
+                      "on-background": "#0b1c30",
+                      "tertiary-container": "#007f36",
+                      "on-error-container": "#93000a",
+                      "tertiary": "#006329",
+                      "surface-bright": "#f8f9ff",
+                      "surface": "#f8f9ff",
+                      "primary": "#004ac6",
+                      "on-primary-fixed-variant": "#003ea8",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-container": "#c7ffca",
+                      "tertiary-fixed": "#7ffc97",
+                      "secondary-container": "#dae2fd",
+                      "on-surface-variant": "#434655",
+                      "on-primary-container": "#eeefff",
+                      "secondary": "#565e74",
+                      "primary-fixed-dim": "#b4c5ff",
+                      "inverse-on-surface": "#eaf1ff",
+                      "on-surface": "#0b1c30",
+                      "surface-dim": "#cbdbf5",
+                      "on-tertiary": "#ffffff",
+                      "tertiary-fixed-dim": "#62df7d"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "sidebar-width": "280px",
+                      "section-gap": "2rem",
+                      "gutter": "1.5rem",
+                      "container-max": "1440px",
+                      "card-padding": "1.5rem",
+                      "sidebar-collapsed": "80px",
+                      "component-padding": "1rem"
+              },
+              "fontFamily": {
+                      "label-sm": ["Inter"],
+                      "label-md": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "body-md": ["Inter"],
+                      "headline-sm": ["Inter"],
+                      "display-lg-mobile": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "body-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "display-lg-mobile": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        .chart-bar { transition: height 1s ease-out; }
+        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(226, 232, 240, 0.8); }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- Side Navigation Bar -->
+<aside class="fixed left-0 top-0 h-screen w-sidebar-width bg-surface-container-lowest border-r border-outline-variant shadow-sm z-50 overflow-y-auto hidden md:flex flex-col py-4 space-y-2">
+<div class="px-6 mb-8 flex items-center space-x-3">
+<div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined">face</span>
+</div>
+<div>
+<h1 class="text-headline-sm font-headline-sm font-bold text-primary">FaceAttend</h1>
+<p class="text-label-sm font-label-sm text-outline">Institutional Admin</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="text-on-surface-variant flex items-center px-6 py-3 hover:bg-surface-container-low transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-6 py-3 hover:bg-surface-container-low transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3">face</span>
+<span class="font-label-md text-label-md">Face Recognition</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-6 py-3 hover:bg-surface-container-low transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3">school</span>
+<span class="font-label-md text-label-md">Students</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-6 py-3 hover:bg-surface-container-low transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3">supervisor_account</span>
+<span class="font-label-md text-label-md">Faculty</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-6 py-3 hover:bg-surface-container-low transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3">menu_book</span>
+<span class="font-label-md text-label-md">Classes</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-6 py-3 hover:bg-surface-container-low transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3">event_available</span>
+<span class="font-label-md text-label-md">Attendance</span>
+</a>
+<!-- Active State for Reports -->
+<a class="bg-primary/10 text-primary border-l-4 border-primary font-bold flex items-center px-6 py-3" href="#">
+<span class="material-symbols-outlined mr-3">assessment</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+<a class="text-on-surface-variant flex items-center px-6 py-3 hover:bg-surface-container-low transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<div class="px-6 pt-4 mt-auto border-t border-outline-variant">
+<div class="flex items-center space-x-3 mb-4">
+<img class="w-10 h-10 rounded-full border border-outline-variant object-cover" data-alt="A professional portrait of an academic institutional administrator, wearing business formal attire, set against a clean, softly lit modern office background with blue accent colors to match the FaceAttend brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqq1_ZApQDBTo7e3iwOKnx-YWwsEwFcHViIqqEldm5rz0VDpcWJl4k-6_zQx4ZJNnfwWoMckXM8PQQoToMujv3q3IP435fHHu8FoLFMPsXO7J9etAEz3CGZb3xRZUAniB4L_Gt2UGYZUGiixeEFslbXvO88RIRPe8OdvsO-xFesSzgjxXCcF6bI-YcaeH5V-Ldo7Duxtt89k_xuNT5ZZZ6Xr7xgx4H-qXIdeqU08-3ssaJK-3sA5q1EAbFezx-SRhK7waU2280XxI"/>
+<div class="overflow-hidden">
+<p class="text-label-md font-label-md font-bold text-on-surface truncate">Admin Sarah</p>
+<p class="text-label-sm font-label-sm text-outline">System Admin</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="md:ml-sidebar-width min-h-screen">
+<!-- Top Nav Bar -->
+<header class="h-16 px-gutter flex items-center justify-between bg-surface border-b border-outline-variant sticky top-0 z-40">
+<div class="flex items-center space-x-4">
+<h2 class="text-headline-sm font-headline-sm font-bold text-primary">Reports &amp; Analytics</h2>
+</div>
+<div class="flex items-center space-x-4">
+<button class="flex items-center text-on-surface-variant hover:bg-surface-container-low p-2 rounded-lg transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="flex items-center text-on-surface-variant hover:bg-surface-container-low p-2 rounded-lg transition-colors">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg font-label-md text-label-md flex items-center gap-2 hover:bg-primary-container transition-all active:scale-95">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                    Export All
+                </button>
+</div>
+</header>
+<div class="max-w-container-max mx-auto p-gutter space-y-gutter">
+<!-- Filters & Quick Actions -->
+<section class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+<div class="space-y-2">
+<label class="text-label-sm font-label-sm text-outline">Date Range</label>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-2.5 text-body-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" type="date"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-label-sm font-label-sm text-outline">Department</label>
+<select class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-2.5 text-body-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all appearance-none">
+<option>All Departments</option>
+<option>Computer Science</option>
+<option>Mechanical Engineering</option>
+<option>Business Admin</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="text-label-sm font-label-sm text-outline">Course/Semester</label>
+<select class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-2.5 text-body-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all appearance-none">
+<option>Spring 2024</option>
+<option>Fall 2023</option>
+</select>
+</div>
+<div>
+<button class="w-full bg-surface-container-high text-primary font-label-md text-label-md py-2.5 rounded-lg border border-primary/20 hover:bg-primary/5 transition-all">
+                        Apply Filters
+                    </button>
+</div>
+</section>
+<!-- Report Type Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Daily Attendance Card -->
+<div class="glass-card p-card-padding rounded-xl flex flex-col justify-between group hover:shadow-lg transition-all duration-300">
+<div>
+<div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">today</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Daily Summary</h3>
+<p class="text-body-sm text-on-surface-variant">Instant snapshot of today's attendance metrics across all departments.</p>
+</div>
+<div class="mt-6 flex items-center justify-between">
+<span class="text-label-sm font-label-sm text-outline">Updated 2m ago</span>
+<button class="text-primary font-label-md text-label-md hover:underline flex items-center">
+                            View Report <span class="material-symbols-outlined ml-1 text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Student-wise Analytics Card -->
+<div class="glass-card p-card-padding rounded-xl flex flex-col justify-between group hover:shadow-lg transition-all duration-300">
+<div>
+<div class="w-12 h-12 bg-tertiary/10 rounded-xl flex items-center justify-center text-tertiary mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">person_search</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Student-wise</h3>
+<p class="text-body-sm text-on-surface-variant">Detailed historical attendance records and trends for individual students.</p>
+</div>
+<div class="mt-6 flex items-center justify-between">
+<span class="text-label-sm font-label-sm text-outline">2,450 Students</span>
+<button class="text-primary font-label-md text-label-md hover:underline flex items-center">
+                            Analyze <span class="material-symbols-outlined ml-1 text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Performance Insights Card -->
+<div class="glass-card p-card-padding rounded-xl flex flex-col justify-between group hover:shadow-lg transition-all duration-300">
+<div>
+<div class="w-12 h-12 bg-secondary/10 rounded-xl flex items-center justify-center text-secondary mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">insights</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Institutional Trends</h3>
+<p class="text-body-sm text-on-surface-variant">Long-term attendance correlation with academic performance and semester cycles.</p>
+</div>
+<div class="mt-6 flex items-center justify-between">
+<span class="text-label-sm font-label-sm text-outline">Monthly Review</span>
+<button class="text-primary font-label-md text-label-md hover:underline flex items-center">
+                            Explore <span class="material-symbols-outlined ml-1 text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Main Charts Section -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Bar Chart: Attendance Trends -->
+<div class="lg:col-span-2 bg-surface-container-lowest border border-outline-variant rounded-xl p-card-padding shadow-sm">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Weekly Attendance Trend</h3>
+<p class="text-body-sm text-outline">Average percentage of present students over the last 7 days</p>
+</div>
+<div class="flex gap-2">
+<button class="px-3 py-1 bg-primary text-on-primary rounded-full text-label-sm font-label-sm">Daily</button>
+<button class="px-3 py-1 bg-surface-container-high text-on-surface-variant rounded-full text-label-sm font-label-sm">Weekly</button>
+</div>
+</div>
+<div class="h-64 flex items-end justify-between px-4 pb-2 border-b border-outline-variant">
+<!-- Bar Items -->
+<div class="flex flex-col items-center group w-12">
+<div class="chart-bar w-8 bg-primary-container rounded-t-lg" style="height: 85%;"></div>
+<span class="mt-2 text-label-sm font-label-sm text-outline">Mon</span>
+</div>
+<div class="flex flex-col items-center group w-12">
+<div class="chart-bar w-8 bg-primary-container rounded-t-lg" style="height: 78%;"></div>
+<span class="mt-2 text-label-sm font-label-sm text-outline">Tue</span>
+</div>
+<div class="flex flex-col items-center group w-12">
+<div class="chart-bar w-8 bg-primary-container rounded-t-lg" style="height: 92%;"></div>
+<span class="mt-2 text-label-sm font-label-sm text-outline">Wed</span>
+</div>
+<div class="flex flex-col items-center group w-12">
+<div class="chart-bar w-8 bg-primary-container rounded-t-lg" style="height: 65%;"></div>
+<span class="mt-2 text-label-sm font-label-sm text-outline">Thu</span>
+</div>
+<div class="flex flex-col items-center group w-12">
+<div class="chart-bar w-8 bg-primary-container rounded-t-lg" style="height: 88%;"></div>
+<span class="mt-2 text-label-sm font-label-sm text-outline">Fri</span>
+</div>
+<div class="flex flex-col items-center group w-12">
+<div class="chart-bar w-8 bg-primary/20 rounded-t-lg" style="height: 30%;"></div>
+<span class="mt-2 text-label-sm font-label-sm text-outline">Sat</span>
+</div>
+<div class="flex flex-col items-center group w-12">
+<div class="chart-bar w-8 bg-primary/20 rounded-t-lg" style="height: 20%;"></div>
+<span class="mt-2 text-label-sm font-label-sm text-outline">Sun</span>
+</div>
+</div>
+</div>
+<!-- Donut Chart: Present vs Absent -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-card-padding shadow-sm flex flex-col">
+<h3 class="text-headline-sm font-headline-sm text-on-surface mb-6">Current Status</h3>
+<div class="flex-1 flex items-center justify-center relative">
+<!-- Custom CSS Donut Visualization -->
+<div class="w-48 h-48 rounded-full border-[16px] border-surface-container relative" style="background: conic-gradient(#004ac6 0% 82%, #ffdad6 82% 100%);">
+<div class="absolute inset-0 m-2 rounded-full bg-white flex flex-col items-center justify-center">
+<span class="text-display-lg font-display-lg text-primary">82%</span>
+<span class="text-label-sm font-label-sm text-outline">Attendance Rate</span>
+</div>
+</div>
+</div>
+<div class="mt-8 space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center">
+<div class="w-3 h-3 bg-primary rounded-full mr-2"></div>
+<span class="text-body-sm font-body-sm">Present</span>
+</div>
+<span class="font-bold text-on-surface">1,240</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center">
+<div class="w-3 h-3 bg-error-container rounded-full mr-2"></div>
+<span class="text-body-sm font-body-sm">Absent</span>
+</div>
+<span class="font-bold text-on-surface">272</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Table: Low Attendance Students -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm overflow-hidden">
+<div class="p-card-padding border-b border-outline-variant flex items-center justify-between bg-surface-bright">
+<div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Low Attendance Alert</h3>
+<p class="text-body-sm text-outline">Students with attendance below institutional threshold (75%)</p>
+</div>
+<button class="flex items-center gap-2 text-primary font-label-md text-label-md border border-primary/20 px-4 py-2 rounded-lg hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined text-[18px]">mail</span>
+                        Notify All
+                    </button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-container-low">
+<tr>
+<th class="px-6 py-4 text-label-sm font-label-sm text-outline uppercase tracking-wider">Student Name</th>
+<th class="px-6 py-4 text-label-sm font-label-sm text-outline uppercase tracking-wider">ID</th>
+<th class="px-6 py-4 text-label-sm font-label-sm text-outline uppercase tracking-wider">Department</th>
+<th class="px-6 py-4 text-label-sm font-label-sm text-outline uppercase tracking-wider">Attendance %</th>
+<th class="px-6 py-4 text-label-sm font-label-sm text-outline uppercase tracking-wider">Trend</th>
+<th class="px-6 py-4 text-label-sm font-label-sm text-outline uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4 flex items-center space-x-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center text-primary font-bold text-[12px]">JS</div>
+<span class="text-body-md font-body-md font-medium">Jordan Smith</span>
+</td>
+<td class="px-6 py-4 text-body-md text-on-surface-variant">STU-2024-0012</td>
+<td class="px-6 py-4 text-body-md text-on-surface-variant">CS - Alpha</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="flex-1 h-2 bg-surface-container rounded-full max-w-[100px]">
+<div class="h-full bg-error rounded-full" style="width: 62%;"></div>
+</div>
+<span class="text-body-md font-bold text-error">62%</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="text-error flex items-center text-label-sm">
+<span class="material-symbols-outlined text-[16px] mr-1">trending_down</span>
+                                        -4%
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4 flex items-center space-x-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center text-primary font-bold text-[12px]">AW</div>
+<span class="text-body-md font-body-md font-medium">Alice Wong</span>
+</td>
+<td class="px-6 py-4 text-body-md text-on-surface-variant">STU-2024-0085</td>
+<td class="px-6 py-4 text-body-md text-on-surface-variant">Mech Eng.</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="flex-1 h-2 bg-surface-container rounded-full max-w-[100px]">
+<div class="h-full bg-error rounded-full" style="width: 71%;"></div>
+</div>
+<span class="text-body-md font-bold text-error">71%</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="text-tertiary flex items-center text-label-sm">
+<span class="material-symbols-outlined text-[16px] mr-1">trending_up</span>
+                                        +2%
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4 flex items-center space-x-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center text-primary font-bold text-[12px]">DR</div>
+<span class="text-body-md font-body-md font-medium">David Ramirez</span>
+</td>
+<td class="px-6 py-4 text-body-md text-on-surface-variant">STU-2024-0142</td>
+<td class="px-6 py-4 text-body-md text-on-surface-variant">Bus. Admin</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="flex-1 h-2 bg-surface-container rounded-full max-w-[100px]">
+<div class="h-full bg-error rounded-full" style="width: 58%;"></div>
+</div>
+<span class="text-body-md font-bold text-error">58%</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="text-error flex items-center text-label-sm">
+<span class="material-symbols-outlined text-[16px] mr-1">trending_down</span>
+                                        -8%
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-6 py-4 flex items-center justify-between bg-surface-container-lowest">
+<span class="text-label-sm font-label-sm text-outline">Showing 3 of 12 critical alerts</span>
+<div class="flex gap-2">
+<button class="p-2 border border-outline-variant rounded-lg hover:bg-surface-container-low text-on-surface-variant disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="p-2 border border-outline-variant rounded-lg hover:bg-surface-container-low text-on-surface-variant">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Mobile Nav Anchor -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface border-t border-outline-variant flex justify-around items-center py-2 z-50 px-4">
+<a class="flex flex-col items-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px]">Home</span>
+</a>
+<a class="flex flex-col items-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">school</span>
+<span class="text-[10px]">Students</span>
+</a>
+<a class="flex flex-col items-center text-primary font-bold" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="text-[10px]">Reports</span>
+</a>
+<a class="flex flex-col items-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px]">Settings</span>
+</a>
+</nav>
+<script>
+        // Simple interactivity for the charts or micro-animations
+        document.addEventListener('DOMContentLoaded', () => {
+            // Animating bars on load
+            const bars = document.querySelectorAll('.chart-bar');
+            bars.forEach((bar, index) => {
+                const targetHeight = bar.style.height;
+                bar.style.height = '0%';
+                setTimeout(() => {
+                    bar.style.height = targetHeight;
+                }, 100 * index);
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Students Management - FaceAttend</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .sidebar-active {
+            background-color: rgba(0, 74, 198, 0.1);
+            color: #004ac6;
+            border-left: 4px solid #004ac6;
+            font-weight: 700;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#dbe1ff",
+                        "surface-container-high": "#dce9ff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface": "#f8f9ff",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#131b2e",
+                        "surface-tint": "#0053db",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-background": "#0b1c30",
+                        "tertiary-container": "#007f36",
+                        "on-tertiary-container": "#c7ffca",
+                        "on-primary-container": "#eeefff",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#dae2fd",
+                        "on-surface": "#0b1c30",
+                        "surface-bright": "#f8f9ff",
+                        "primary-container": "#2563eb",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-surface-variant": "#434655",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "on-primary-fixed": "#00174b",
+                        "on-tertiary": "#ffffff",
+                        "inverse-surface": "#213145",
+                        "outline": "#737686",
+                        "outline-variant": "#c3c6d7",
+                        "surface-container-low": "#eff4ff",
+                        "background": "#f8f9ff",
+                        "surface-dim": "#cbdbf5",
+                        "on-tertiary-fixed": "#002109",
+                        "inverse-primary": "#b4c5ff",
+                        "secondary": "#565e74",
+                        "on-error": "#ffffff",
+                        "surface-container": "#e5eeff",
+                        "on-tertiary-fixed-variant": "#005320",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#7ffc97",
+                        "surface-variant": "#d3e4fe",
+                        "secondary-fixed": "#dae2fd",
+                        "tertiary-fixed-dim": "#62df7d",
+                        "surface-container-highest": "#d3e4fe",
+                        "tertiary": "#006329",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#5c647a",
+                        "primary": "#004ac6",
+                        "secondary-fixed-dim": "#bec6e0"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "1.5rem",
+                        "sidebar-width": "280px",
+                        "sidebar-collapsed": "80px",
+                        "container-max": "1440px",
+                        "section-gap": "2rem",
+                        "component-padding": "1rem",
+                        "card-padding": "1.5rem"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "display-lg-mobile": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "display-lg-mobile": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased overflow-x-hidden">
+<!-- Sidebar Component (Shared) -->
+<aside class="fixed left-0 top-0 h-screen w-sidebar-width bg-surface-container-lowest border-r border-outline-variant shadow-sm z-50 flex flex-col py-4 space-y-2">
+<div class="px-6 pb-6 flex items-center space-x-3">
+<div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-display-lg-mobile" style="font-variation-settings: 'FILL' 1;">face</span>
+</div>
+<div>
+<h1 class="text-headline-sm font-headline-sm font-bold text-primary">FaceAttend</h1>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Institutional Admin</p>
+</div>
+</div>
+<nav class="flex-1 overflow-y-auto px-2 space-y-1">
+<a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-all rounded-lg active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-all rounded-lg active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3">face</span>
+<span class="font-label-md text-label-md">Face Recognition</span>
+</a>
+<a class="sidebar-active flex items-center px-4 py-3 rounded-lg active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3" style="font-variation-settings: 'FILL' 1;">school</span>
+<span class="font-label-md text-label-md">Students</span>
+</a>
+<a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-all rounded-lg active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3">supervisor_account</span>
+<span class="font-label-md text-label-md">Faculty</span>
+</a>
+<a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-all rounded-lg active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3">menu_book</span>
+<span class="font-label-md text-label-md">Classes</span>
+</a>
+<a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-all rounded-lg active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3">event_available</span>
+<span class="font-label-md text-label-md">Attendance</span>
+</a>
+<a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-all rounded-lg active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3">assessment</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+<a class="flex items-center px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-all rounded-lg active:translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined mr-3">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<div class="px-4 mt-auto">
+<div class="p-4 bg-surface-container rounded-xl flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a university administrator with a friendly expression, set against a clean, light blue office background that matches the FaceAttend UI theme. The lighting is soft and corporate, conveying trust and efficiency." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIChvkAMjVv7pXNyJ8986oyH359QWlPg8psP1kOJED_TApVBwgMTIXk6oSyaN-43yi0iOKvPWvKwcTM601_wokZCQVBxNFmVBrhSQXXxEGZWGUlRdiZPUNQThp9g5GC2V_Thq8VfTGnqePomTra58wYG7RQCybmus9XFDzpub2tZipHZEOBn4Le-18u2gPYLCOQSP5vOZahn8Iezdix1c1m6AzLl1zJm4BkL4sipCv5ZA45GUodey3BfgOEoLzOkUfSTC8p6ymYJg"/>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-label-md font-label-md truncate">Admin User</p>
+<p class="text-label-sm text-on-surface-variant truncate">Principal's Office</p>
+</div>
+<button class="text-on-surface-variant hover:text-primary">
+<span class="material-symbols-outlined">logout</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-sidebar-width min-h-screen">
+<!-- TopNavBar Component (Shared) -->
+<header class="fixed top-0 right-0 left-sidebar-width h-16 bg-surface border-b border-outline-variant shadow-sm z-40 flex items-center justify-between px-gutter">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-full text-body-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" placeholder="Search students, IDs, or classes..." type="text"/>
+</div>
+</div>
+<div class="flex items-center space-x-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container-low transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-surface"></span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant mx-2"></div>
+<button class="flex items-center space-x-2 text-label-md font-label-md text-primary hover:bg-primary/5 px-3 py-2 rounded-lg transition-colors">
+<span class="material-symbols-outlined">account_circle</span>
+<span>User Profile</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<div class="pt-24 px-gutter pb-12 max-w-container-max mx-auto">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+<div>
+<h2 class="text-display-lg font-display-lg text-on-surface tracking-tight">Students Management</h2>
+<p class="text-body-md text-on-surface-variant mt-1">Manage institutional student records and biometric profiles.</p>
+</div>
+<button class="flex items-center justify-center bg-primary text-on-primary font-label-md px-6 py-3 rounded-xl shadow-lg hover:bg-primary-container transition-all active:scale-95" onclick="document.getElementById('add-student-modal').classList.remove('hidden')">
+<span class="material-symbols-outlined mr-2">person_add</span>
+                    Add New Student
+                </button>
+</div>
+<!-- Dashboard Stats Summary (Bento-lite) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+<div class="bg-surface-container-lowest p-card-padding rounded-2xl border border-outline-variant shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">groups</span>
+</div>
+<span class="text-tertiary font-label-sm">+4% vs last mo</span>
+</div>
+<p class="text-label-sm text-on-surface-variant uppercase tracking-wider">Total Students</p>
+<h3 class="text-headline-md font-headline-md mt-1">1,284</h3>
+</div>
+<div class="bg-surface-container-lowest p-card-padding rounded-2xl border border-outline-variant shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<div class="w-10 h-10 bg-tertiary-container/10 rounded-lg flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">verified</span>
+</div>
+<span class="text-tertiary font-label-sm">98.2% Registered</span>
+</div>
+<p class="text-label-sm text-on-surface-variant uppercase tracking-wider">Face Profiles</p>
+<h3 class="text-headline-md font-headline-md mt-1">1,261</h3>
+</div>
+<div class="bg-surface-container-lowest p-card-padding rounded-2xl border border-outline-variant shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<div class="w-10 h-10 bg-error/10 rounded-lg flex items-center justify-center text-error">
+<span class="material-symbols-outlined">warning</span>
+</div>
+<span class="text-error font-label-sm">-2% vs yesterday</span>
+</div>
+<p class="text-label-sm text-on-surface-variant uppercase tracking-wider">Daily Presence</p>
+<h3 class="text-headline-md font-headline-md mt-1">92.4%</h3>
+</div>
+<div class="bg-surface-container-lowest p-card-padding rounded-2xl border border-outline-variant shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<div class="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">pending_actions</span>
+</div>
+<span class="text-on-surface-variant font-label-sm">Needs Review</span>
+</div>
+<p class="text-label-sm text-on-surface-variant uppercase tracking-wider">Incomplete Profiles</p>
+<h3 class="text-headline-md font-headline-md mt-1">23</h3>
+</div>
+</div>
+<!-- Table Filter Bar -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-t-2xl px-6 py-4 flex flex-wrap items-center gap-4">
+<div class="flex items-center bg-surface-container-low px-4 py-2 rounded-lg border border-outline-variant flex-1 min-w-[300px]">
+<span class="material-symbols-outlined text-on-surface-variant mr-3">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-sm w-full outline-none" placeholder="Filter by name or ID..." type="text"/>
+</div>
+<div class="flex items-center gap-2">
+<select class="bg-surface-container-low border border-outline-variant rounded-lg px-4 py-2 text-label-md focus:ring-primary outline-none">
+<option>All Departments</option>
+<option>Computer Science</option>
+<option>Information Tech</option>
+<option>Electronics</option>
+<option>Mechanical</option>
+</select>
+<select class="bg-surface-container-low border border-outline-variant rounded-lg px-4 py-2 text-label-md focus:ring-primary outline-none">
+<option>Active Status</option>
+<option>Inactive</option>
+<option>Suspended</option>
+</select>
+<button class="flex items-center px-4 py-2 border border-outline-variant rounded-lg hover:bg-surface-container-low transition-colors text-label-md">
+<span class="material-symbols-outlined mr-2">filter_list</span>
+                        More Filters
+                    </button>
+</div>
+<div class="ml-auto flex items-center gap-2">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">download</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">print</span>
+</button>
+</div>
+</div>
+<!-- Student Data Table -->
+<div class="bg-surface-container-lowest border-x border-b border-outline-variant rounded-b-2xl shadow-sm overflow-hidden overflow-x-auto">
+<table class="w-full border-collapse">
+<thead class="bg-surface-container-low border-b border-outline-variant text-left">
+<tr>
+<th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Student Profile</th>
+<th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Enrollment No</th>
+<th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Department</th>
+<th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Semester</th>
+<th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Attendance %</th>
+<th class="px-6 py-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Status</th>
+<th class="px-6 py-4"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center">
+<div class="h-10 w-10 flex-shrink-0 rounded-full border-2 border-surface-container overflow-hidden group-hover:border-primary/20 transition-all">
+<img class="h-full w-full object-cover" data-alt="A focused close-up photo of a student for biometric identification purposes. The student is a young man with glasses, looking directly at the camera with a neutral expression. The background is a crisp white studio setting, perfectly matching the professional FaceAttend dashboard interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDylItTVtT6GDz5l17zX4oViGBNS7nIYwdSN7AiYJQILgmDFnrRF_6wGr9NUgW-vCHZ2GEHWYxhUmpK8wWxHwreZuf1FtAxCRK_D9jR5Ls1GDE5bdZ1ZEChvTrsrhcw9B4Zw52KV11GutnTHioEMSspEodjSLqzXwiR6DGPOUK8tlLiWquJwiDdwo0cWuWByTo1H20FJqugKGFY6DihjgCioR-swv0TEZ83u6vIwbCzA8fpPMs_4cK7mjk0HGWb1K5bQ6pbDaEEwsQ"/>
+</div>
+<div class="ml-4">
+<div class="text-label-md font-label-md text-on-surface">Alex Rivera</div>
+<div class="text-body-sm text-on-surface-variant">alex.rivera@edu.inst</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="text-body-sm font-mono text-on-surface-variant bg-surface-container px-2 py-1 rounded">FA-2023-0941</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="text-body-sm">Computer Science</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="text-body-sm">4th Semester</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="w-16 h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 94%"></div>
+</div>
+<span class="text-label-md font-label-md text-primary">94%</span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2.5 py-1 rounded-full text-label-sm bg-tertiary-container/20 text-tertiary flex items-center w-fit">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary mr-1.5"></span>
+                                    Active
+                                </span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-lg transition-all">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center">
+<div class="h-10 w-10 flex-shrink-0 rounded-full border-2 border-surface-container overflow-hidden group-hover:border-primary/20 transition-all">
+<img class="h-full w-full object-cover" data-alt="A portrait of a young female student for an institutional database. She has a bright smile and is wearing a casual navy blazer. The lighting is bright and modern, set against a neutral gray background that emphasizes her features for face recognition clarity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVMJ4bqxb6hLB6GyK4sGJlLmzUZtgW4Gs0iIFtSTRI87hAsSNehV18LrqZTOrbXtrjld3T2PEd5QmvhNWMKH7zHCDp49oNK14yOawqK8ymc9UfypGSB_h0_sGaU_rURwahq5xbk_g_dlWbYMzphR0nX3JhDLFXx4i4fhyXcOycY78eBDKGG29EsoEFZcF13enJBvTMsera_Ks5GPzqGxwTKjSY2yMXqV5WXCMPaBKNMhQC6905WmUWMl3vrDshePV7xr_BhHGS070"/>
+</div>
+<div class="ml-4">
+<div class="text-label-md font-label-md text-on-surface">Samantha Chen</div>
+<div class="text-body-sm text-on-surface-variant">s.chen@edu.inst</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="text-body-sm font-mono text-on-surface-variant bg-surface-container px-2 py-1 rounded">FA-2023-0812</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="text-body-sm">Information Tech</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="text-body-sm">6th Semester</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="w-16 h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 78%"></div>
+</div>
+<span class="text-label-md font-label-md text-primary">78%</span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2.5 py-1 rounded-full text-label-sm bg-tertiary-container/20 text-tertiary flex items-center w-fit">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary mr-1.5"></span>
+                                    Active
+                                </span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-lg transition-all">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center">
+<div class="h-10 w-10 flex-shrink-0 rounded-full border-2 border-surface-container overflow-hidden group-hover:border-primary/20 transition-all">
+<img class="h-full w-full object-cover" data-alt="A profile headshot of a student with a professional and serious demeanor. The lighting is balanced and soft, highlighting facial features for biometric consistency. The overall style is clean, modern, and high-clarity, fitting for an advanced educational management system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCL7pggMALHfzv1CZDVqFJEHQ1zI9UbWQp6B_1RJFtC391OGgCtrqW_i1kZZSttkx49vUkEmLrNtzIH4VL6nvcc7tJlHJQLilwtXobzYJ-XZ5d-cbQrzbBBb4aOgwetqbs5Ckm8iZnAyaLmLpDyj_vqVSQon_t7L7Zj6GmuTfmUvfSUbpaxswrvfb6I6Bik-dtz0MzV4SA3JEbS12QtwdvnamsCbjh6j_WhXNYEtH9u9bt1HV7fX4gOMZA4htle432a7HRtNDLvB1c"/>
+</div>
+<div class="ml-4">
+<div class="text-label-md font-label-md text-on-surface">Jordan Smith</div>
+<div class="text-body-sm text-on-surface-variant">jordan.s@edu.inst</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="text-body-sm font-mono text-on-surface-variant bg-surface-container px-2 py-1 rounded">FA-2022-1104</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="text-body-sm">Mechanical Eng</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="text-body-sm">2nd Semester</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="w-16 h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-error" style="width: 62%"></div>
+</div>
+<span class="text-label-md font-label-md text-error">62%</span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2.5 py-1 rounded-full text-label-sm bg-error-container/20 text-error flex items-center w-fit">
+<span class="w-1.5 h-1.5 rounded-full bg-error mr-1.5"></span>
+                                    Warning
+                                </span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-lg transition-all">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center">
+<div class="h-10 w-10 flex-shrink-0 rounded-full border-2 border-surface-container overflow-hidden group-hover:border-primary/20 transition-all">
+<img class="h-full w-full object-cover" data-alt="Clear facial profile of a male student wearing a white collared shirt. He has a friendly look. The photography is sharp with high contrast, ideal for facial recognition database standards. The environment is a clean institutional setting with light blue and white tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQJ7ia_dAQrXPmRRzzkawr4nobLhImz9250kNr8onWDzIduPZc-rR2TsoAeTCixKripNQUWeoqYKvpWq7xxHHk9nb0s-NzyjnFQHpIUVeeO6zXWi-RuJ8x21HgTr1CKCNJoZT6wYgp-6ziHL0X77iUldgXUIoFQaAy7REecEtwjwEU-kr671VqQI51OQ_isNYSAkTOHRhDKmID0lk_-RgQYGm9dIvNSumU7xXb6dQXPh161VjpKfv-5CSh50Z0DpMi_OwHJk5-Oxw"/>
+</div>
+<div class="ml-4">
+<div class="text-label-md font-label-md text-on-surface">Marcus Thorne</div>
+<div class="text-body-sm text-on-surface-variant">m.thorne@edu.inst</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="text-body-sm font-mono text-on-surface-variant bg-surface-container px-2 py-1 rounded">FA-2023-0429</span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="text-body-sm">Electronics</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="text-body-sm">8th Semester</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<div class="w-16 h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 88%"></div>
+</div>
+<span class="text-label-md font-label-md text-primary">88%</span>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2.5 py-1 rounded-full text-label-sm bg-tertiary-container/20 text-tertiary flex items-center w-fit">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary mr-1.5"></span>
+                                    Active
+                                </span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-lg transition-all">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination -->
+<div class="bg-surface-container-low px-6 py-4 flex items-center justify-between border-t border-outline-variant">
+<p class="text-label-sm text-on-surface-variant">Showing 1 to 4 of 1,284 students</p>
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-highest transition-colors disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg bg-primary text-on-primary font-label-md">1</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-highest transition-colors">2</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-highest transition-colors">3</button>
+<span class="text-on-surface-variant px-2">...</span>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-highest transition-colors">321</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Add Student Modal Overlay -->
+<div class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4" id="add-student-modal">
+<!-- Backdrop -->
+<div class="absolute inset-0 bg-on-surface/40 backdrop-blur-sm" onclick="document.getElementById('add-student-modal').classList.add('hidden')"></div>
+<!-- Modal Content -->
+<div class="relative bg-surface rounded-2xl shadow-2xl w-full max-w-2xl max-h-[921px] overflow-y-auto flex flex-col">
+<!-- Modal Header -->
+<div class="px-8 py-6 border-b border-outline-variant flex items-center justify-between sticky top-0 bg-surface z-10">
+<div>
+<h3 class="text-headline-md font-headline-md text-on-surface">Add New Student</h3>
+<p class="text-body-sm text-on-surface-variant">Register a new student and enroll biometric data.</p>
+</div>
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-colors text-on-surface-variant" onclick="document.getElementById('add-student-modal').classList.add('hidden')">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Modal Body -->
+<form class="p-8 space-y-6">
+<!-- Biometric Section -->
+<div class="space-y-4">
+<h4 class="text-label-sm font-label-sm uppercase tracking-wider text-primary">Biometric Enrollment</h4>
+<div class="flex items-center gap-6">
+<div class="relative group">
+<div class="w-32 h-32 rounded-2xl bg-surface-container-low border-2 border-dashed border-outline-variant flex flex-col items-center justify-center text-on-surface-variant overflow-hidden group-hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-display-lg text-outline">add_a_photo</span>
+<span class="text-label-sm mt-2">Upload Photo</span>
+</div>
+<input class="absolute inset-0 opacity-0 cursor-pointer" type="file"/>
+</div>
+<div class="flex-1 bg-surface-container-lowest border border-outline-variant rounded-2xl p-4 flex items-center justify-between">
+<div>
+<p class="text-label-md font-label-md">Direct Face Scan</p>
+<p class="text-body-sm text-on-surface-variant">Use connected camera for enrollment.</p>
+</div>
+<button class="px-4 py-2 bg-secondary-fixed text-on-secondary-fixed font-label-md rounded-lg hover:bg-secondary-fixed-dim transition-colors" type="button">Launch Camera</button>
+</div>
+</div>
+</div>
+<!-- Form Fields -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Full Name</label>
+<input class="w-full px-4 py-3 bg-surface-container-low border border-outline-variant rounded-xl focus:ring-2 focus:ring-primary outline-none" placeholder="e.g. John Doe" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Enrollment Number</label>
+<input class="w-full px-4 py-3 bg-surface-container-low border border-outline-variant rounded-xl focus:ring-2 focus:ring-primary outline-none" placeholder="e.g. FA-2024-0000" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Email Address</label>
+<input class="w-full px-4 py-3 bg-surface-container-low border border-outline-variant rounded-xl focus:ring-2 focus:ring-primary outline-none" placeholder="student@university.edu" type="email"/>
+</div>
+<div class="space-y-2">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Department</label>
+<select class="w-full px-4 py-3 bg-surface-container-low border border-outline-variant rounded-xl focus:ring-2 focus:ring-primary outline-none">
+<option>Select Department</option>
+<option>Computer Science</option>
+<option>Information Tech</option>
+<option>Mechanical Eng</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Semester</label>
+<select class="w-full px-4 py-3 bg-surface-container-low border border-outline-variant rounded-xl focus:ring-2 focus:ring-primary outline-none">
+<option>Semester 1</option>
+<option>Semester 2</option>
+<option>Semester 3</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Date of Birth</label>
+<input class="w-full px-4 py-3 bg-surface-container-low border border-outline-variant rounded-xl focus:ring-2 focus:ring-primary outline-none" type="date"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-label-sm font-label-sm text-on-surface-variant">Permanent Address</label>
+<textarea class="w-full px-4 py-3 bg-surface-container-low border border-outline-variant rounded-xl focus:ring-2 focus:ring-primary outline-none" placeholder="Enter full residential address..." rows="3"></textarea>
+</div>
+<!-- Modal Footer -->
+<div class="flex items-center justify-end gap-4 pt-6 border-t border-outline-variant">
+<button class="px-6 py-3 font-label-md text-on-surface-variant hover:bg-surface-container-low rounded-xl transition-all" onclick="document.getElementById('add-student-modal').classList.add('hidden')" type="button">Cancel</button>
+<button class="px-8 py-3 bg-primary text-on-primary font-label-md rounded-xl shadow-lg hover:shadow-xl active:scale-95 transition-all" type="submit">Save Student Profile</button>
+</div>
+</form>
+</div>
+</div>
+<!-- Micro-interaction Scripts -->
+<script>
+        // Modal State Toggle Helper
+        function toggleModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.toggle('hidden');
+        }
+
+        // Close on ESC
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.getElementById('add-student-modal').classList.add('hidden');
+            }
+        });
+        
+        // Tab Focus Management
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (!this.classList.contains('sidebar-active')) {
+                    // Logic for visual switching (frontend only)
+                    document.querySelectorAll('nav a').forEach(l => {
+                        l.classList.remove('sidebar-active');
+                        l.classList.add('text-on-surface-variant');
+                        const icon = l.querySelector('.material-symbols-outlined');
+                        if (icon) icon.style.fontVariationSettings = "'FILL' 0";
+                    });
+                    this.classList.add('sidebar-active');
+                    this.classList.remove('text-on-surface-variant');
+                    const icon = this.querySelector('.material-symbols-outlined');
+                    if (icon) icon.style.fontVariationSettings = "'FILL' 1";
+                }
+            });
+        });
+    </script>
+</body></html>
