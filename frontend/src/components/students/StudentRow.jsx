@@ -13,6 +13,7 @@ export const StudentRow = ({
 }) => {
   const { user } = useAuth();
   const isAdmin = user?.role === 'ADMIN';
+  const canManage = isAdmin || user?.role === 'FACULTY';
 
   return (
     <tr className="hover:bg-slate-50 transition-colors">
@@ -51,7 +52,7 @@ export const StudentRow = ({
           >
             <Eye className="h-4.5 w-4.5" />
           </Link>
-          {isAdmin && (
+          {canManage && (
             <>
               <button
                 onClick={() => onEdit(student)}
@@ -71,14 +72,16 @@ export const StudentRow = ({
               >
                 <Camera className="h-4.5 w-4.5" />
               </button>
-              <button
-                onClick={() => onDelete(student)}
-                title="Delete Student"
-                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-red-600 transition-colors"
-              >
-                <Trash2 className="h-4.5 w-4.5" />
-              </button>
             </>
+          )}
+          {isAdmin && (
+            <button
+              onClick={() => onDelete(student)}
+              title="Delete Student"
+              className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-red-600 transition-colors"
+            >
+              <Trash2 className="h-4.5 w-4.5" />
+            </button>
           )}
         </div>
       </td>

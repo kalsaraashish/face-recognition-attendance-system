@@ -24,3 +24,21 @@ export const deleteEncodings = async (studentId) => {
   const { data } = await api.delete(`/face/${studentId}`);
   return data;
 };
+
+export const registerFacultyFace = async (facultyId, files) => {
+  const formData = new FormData();
+  files.forEach((file) => {
+    formData.append('images', file);
+  });
+  const { data } = await api.post(`/face/register/faculty/${facultyId}`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+  return data;
+};
+
+export const deleteFacultyEncodings = async (facultyId) => {
+  const { data } = await api.delete(`/face/faculty/${facultyId}`);
+  return data;
+};
+
+

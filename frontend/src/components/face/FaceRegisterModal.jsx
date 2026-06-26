@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import Modal from '../common/Modal';
 import Button from '../common/Button';
-import { registerFace } from '../../api/faceApi';
+import { registerFace, registerFacultyFace, deleteEncodings, deleteFacultyEncodings } from '../../api/faceApi';
 import { Upload, X, CheckCircle2, XCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-export const FaceRegisterModal = ({ isOpen, onClose, student, onRegisterSuccess }) => {
+export const FaceRegisterModal = ({ isOpen, onClose, student, faculty, type = 'student', onRegisterSuccess }) => {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
   const [results, setResults] = useState(null); // { total_uploaded, registered, results: [] }
+
+  const person = type === 'faculty' ? faculty : student;
+  const hasFaceRegistered = person?.has_face_registered;
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
@@ -47,7 +51,9 @@ export const FaceRegisterModal = ({ isOpen, onClose, student, onRegisterSuccess 
     const toastId = toast.loading('Uploading face images...');
     
     try {
-      const res = await registerFace(student.id, selectedFiles);
+      const res = type === 'faculty'
+        ? await registerFacultyFace(faculty.id, selectedFiles)
+        : await registerFace(student.id, selectedFiles);
       setResults(res);
       toast.success(`Registered ${res.registered} of ${res.total_uploaded} images!`, { id: toastId });
       setSelectedFiles([]);
@@ -61,6 +67,30 @@ export const FaceRegisterModal = ({ isOpen, onClose, student, onRegisterSuccess 
     }
   };
 
+  const handleReset = async () => {
+    if (!window.confirm(`Are you sure you want to delete all registered face encodings for this ${type === 'faculty' ? 'faculty member' : 'student'}?`)) {
+      return;
+    }
+    setResetLoading(true);
+    const toastId = toast.loading('Deleting face encodings...');
+    try {
+      if (type === 'faculty') {
+        await deleteFacultyEncodings(faculty.id);
+      } else {
+        await deleteEncodings(student.id);
+      }
+      toast.success('Face encodings deleted successfully', { id: toastId });
+      if (onRegisterSuccess) onRegisterSuccess();
+      handleClose();
+    } catch (error) {
+      console.error(error);
+      const detail = error.response?.data?.detail || 'Failed to delete face encodings';
+      toast.error(detail, { id: toastId });
+    } finally {
+      setResetLoading(false);
+    }
+  };
+
   const handleClose = () => {
     // Clear state
     selectedFiles.forEach((file) => URL.revokeObjectURL(file.preview));
@@ -70,13 +100,13 @@ export const FaceRegisterModal = ({ isOpen, onClose, student, onRegisterSuccess 
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} title={`Register Face: ${student?.full_name || ''}`} size="lg">
+    <Modal isOpen={isOpen} onClose={handleClose} title={`Register Face: ${type === 'faculty' ? (faculty?.name || '') : (student?.full_name || '')}`} size="lg">
       <div className="space-y-5">
         {/* Info Banner */}
         <div className="rounded-lg bg-blue-50 border border-blue-100 p-3 text-xs text-blue-800">
           <p className="font-semibold mb-1">Face Registration Guidelines:</p>
           <ul className="list-disc pl-4 space-y-0.5">
-            <li>Upload 1 to 10 photos of the student.</li>
+            <li>Upload 1 to 10 photos of the {type === 'faculty' ? 'faculty member' : 'student'}.</li>
             <li>Photos should be clear, well-lit, and focus on the face.</li>
             <li>Each image must contain exactly **one** face.</li>
             <li>Supported formats: JPEG, JPG, PNG. Max size: 10MB per file.</li>
@@ -183,20 +213,34 @@ export const FaceRegisterModal = ({ isOpen, onClose, student, onRegisterSuccess 
         )}
 
         {/* Modal Buttons */}
-        <div className="flex justify-end space-x-3 border-t border-slate-100 pt-4 mt-6">
-          <Button variant="secondary" onClick={handleClose} disabled={loading}>
-            {results ? 'Close' : 'Cancel'}
-          </Button>
-          {!results && (
-            <Button
-              variant="primary"
-              onClick={handleUpload}
-              loading={loading}
-              disabled={selectedFiles.length === 0}
-            >
-              Upload and Register
+        <div className="flex justify-between items-center border-t border-slate-100 pt-4 mt-6">
+          <div>
+            {!results && hasFaceRegistered && (
+              <Button
+                variant="danger"
+                onClick={handleReset}
+                loading={resetLoading}
+                className="bg-red-50 text-red-700 border border-red-200 hover:bg-red-100"
+              >
+                Reset (Delete) Face
+              </Button>
+            )}
+          </div>
+          <div className="flex space-x-3">
+            <Button variant="secondary" onClick={handleClose} disabled={loading || resetLoading}>
+              {results ? 'Close' : 'Cancel'}
             </Button>
-          )}
+            {!results && (
+              <Button
+                variant="primary"
+                onClick={handleUpload}
+                loading={loading}
+                disabled={selectedFiles.length === 0 || resetLoading}
+              >
+                Upload and Register
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </Modal>

@@ -44,3 +44,22 @@ export const deleteSession = async (id) => {
   const { data } = await api.delete(`/attendance/sessions/${id}`);
   return data;
 };
+
+export const markFacultyAttendanceByFace = async (imageBlob) => {
+  const formData = new FormData();
+  formData.append('image', imageBlob, 'capture.jpg');
+  const { data } = await api.post('/attendance/faculty/mark/face', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+  return data;
+};
+
+export const getFacultyTodayStatus = async () => {
+  const { data } = await api.get('/attendance/faculty/today-status');
+  return data;
+};
+
+export const getFacultyAttendanceHistory = async () => {
+  const { data } = await api.get('/attendance/faculty/history');
+  return data;
+};

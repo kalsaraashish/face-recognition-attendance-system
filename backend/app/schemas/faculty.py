@@ -51,6 +51,8 @@ class FacultyOut(BaseModel):
     department_id: int
     department: Optional[DepartmentBrief]
     status: bool
+    has_face_registered: bool = False
+    photo_url: Optional[str] = None
 
     model_config = {"from_attributes": True}
 

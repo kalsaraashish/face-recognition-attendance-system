@@ -16,6 +16,7 @@ class Faculty(Base):
     department_id: Mapped[int] = mapped_column(ForeignKey("departments.id"), nullable=False)
     user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True, unique=True)
     status: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    photo_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
 
     # ── Relationships ─────────────────────────────────────────────
     department: Mapped["Department"] = relationship(  # noqa: F821
@@ -26,6 +27,12 @@ class Faculty(Base):
     )
     attendance_sessions: Mapped[list["AttendanceSession"]] = relationship(  # noqa: F821
         "AttendanceSession", back_populates="faculty"
+    )
+    face_encodings: Mapped[list["FaceEncoding"]] = relationship(  # noqa: F821
+        "FaceEncoding", back_populates="faculty", cascade="all, delete-orphan"
+    )
+    attendance_records: Mapped[list["FacultyAttendance"]] = relationship(  # noqa: F821
+        "FacultyAttendance", back_populates="faculty", cascade="all, delete-orphan"
     )
 
     def __repr__(self) -> str:

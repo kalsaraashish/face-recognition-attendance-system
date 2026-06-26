@@ -17,6 +17,7 @@ import { SEMESTERS } from '../utils/constants';
 export const StudentsPage = () => {
   const { user } = useAuth();
   const isAdmin = user?.role === 'ADMIN';
+  const canManage = isAdmin || user?.role === 'FACULTY';
 
   const {
     students,
@@ -152,7 +153,7 @@ export const StudentsPage = () => {
             {total} Total
           </span>
         </div>
-        {isAdmin && (
+        {canManage && (
           <Button
             variant="primary"
             onClick={() => {
@@ -231,7 +232,7 @@ export const StudentsPage = () => {
         empty={students.length === 0}
         emptyTitle="No students found"
         emptyDescription="We couldn't find any students matching those filter criteria."
-        emptyActionLabel={isAdmin ? 'Add a Student' : null}
+        emptyActionLabel={canManage ? 'Add a Student' : null}
         onEmptyAction={() => setIsFormOpen(true)}
       >
         {students.map((student, idx) => (

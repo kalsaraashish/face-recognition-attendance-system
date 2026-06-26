@@ -5,6 +5,10 @@ import StatCard from '../components/dashboard/StatCard';
 import { WeeklyOverviewChart, AttendanceBreakdownChart } from '../components/dashboard/AttendanceChart';
 import Spinner from '../components/common/Spinner';
 import ErrorState from '../components/common/ErrorState';
+import { getFacultyTodayStatus } from '../api/attendanceApi';
+import FacultyCameraCheckIn from '../components/dashboard/FacultyCameraCheckIn';
+import Modal from '../components/common/Modal';
+import Button from '../components/common/Button';
 import {
   GraduationCap,
   Users,
@@ -36,6 +40,10 @@ export const DashboardPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Faculty Daily Attendance State
+  const [facultyTodayStatus, setFacultyTodayStatus] = useState(null);
+  const [isCheckInModalOpen, setIsCheckInModalOpen] = useState(false);
+
   const fetchDashboardData = async () => {
     setLoading(true);
     setError(null);
@@ -53,6 +61,20 @@ export const DashboardPage = () => {
   useEffect(() => {
     fetchDashboardData();
   }, []);
+
+  useEffect(() => {
+    if (user?.role === 'FACULTY') {
+      const fetchStatus = async () => {
+        try {
+          const status = await getFacultyTodayStatus();
+          setFacultyTodayStatus(status);
+        } catch (err) {
+          console.error('Failed to fetch faculty today attendance status', err);
+        }
+      };
+      fetchStatus();
+    }
+  }, [user]);
 
   if (loading) {
     return (
@@ -174,9 +196,53 @@ export const DashboardPage = () => {
     );
   };
 
+  const renderFacultyDailyAttendanceCard = () => {
+    if (!facultyTodayStatus) return null;
+
+    const { marked, marked_at, status } = facultyTodayStatus;
+
+    return (
+      <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex items-center space-x-3.5">
+          <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${
+            marked ? 'bg-emerald-50 text-emerald-600' : 'bg-blue-50 text-blue-600'
+          }`}>
+            <UserCheck className="h-5.5 w-5.5" />
+          </div>
+          <div>
+            <h4 className="text-sm font-bold text-slate-800 tracking-tight">
+              {marked ? 'Daily Attendance Check-in Successful' : 'Daily Attendance Not Marked'}
+            </h4>
+            <p className="text-xs text-slate-500 mt-0.5 font-medium">
+              {marked
+                ? `You checked in successfully today at ${new Date(marked_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
+                : 'Please verify your face to mark your presence for today.'}
+            </p>
+          </div>
+        </div>
+        
+        {marked ? (
+          <span className="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 border border-emerald-150">
+            ✓ Check-in Verified
+          </span>
+        ) : (
+          <Button
+            variant="primary"
+            onClick={() => setIsCheckInModalOpen(true)}
+            className="shadow-sm font-semibold text-xs py-2 px-4.5"
+          >
+            Check In Now
+          </Button>
+        )}
+      </div>
+    );
+  };
+
   const renderFacultyDashboard = () => {
     return (
       <div className="space-y-6 animate-in fade-in duration-300">
+        {renderFacultyDailyAttendanceCard()}
+
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
           <StatCard
             title="Today's Sessions"
@@ -376,6 +442,29 @@ export const DashboardPage = () => {
       {user?.role === 'ADMIN' && renderAdminDashboard()}
       {user?.role === 'FACULTY' && renderFacultyDashboard()}
       {user?.role === 'STUDENT' && renderStudentDashboard()}
+
+      {/* Faculty Daily Attendance Modal */}
+      {isCheckInModalOpen && (
+        <Modal
+          isOpen={isCheckInModalOpen}
+          onClose={() => setIsCheckInModalOpen(false)}
+          title="Daily Faculty Face Verification"
+          size="md"
+        >
+          <FacultyCameraCheckIn
+            onSuccess={async () => {
+              setIsCheckInModalOpen(false);
+              try {
+                const status = await getFacultyTodayStatus();
+                setFacultyTodayStatus(status);
+              } catch (e) {
+                console.error(e);
+              }
+            }}
+            onCancel={() => setIsCheckInModalOpen(false)}
+          />
+        </Modal>
+      )}
     </div>
   );
 };

@@ -20,13 +20,13 @@ router = APIRouter(prefix="/face", tags=["Face Recognition"])
 
 @router.post(
     "/register/{student_id}",
-    summary="Register face images for a student (Admin)",
+    summary="Register face images for a student",
 )
 async def register_face(
     student_id: int,
     images: List[UploadFile] = File(..., description="One or more face images (JPEG/PNG)"),
     db: Session = Depends(get_db),
-    _=Depends(require_admin),
+    _=Depends(require_admin_or_faculty),
 ):
     """
     Upload 1–10 face images for a student. Each image must contain exactly one face.
@@ -70,6 +70,44 @@ async def recognize_face(
 def delete_face_encodings(
     student_id: int,
     db: Session = Depends(get_db),
-    _=Depends(require_admin),
+    _=Depends(require_admin_or_faculty),
 ):
     return FaceService(db).delete_student_encodings(student_id)
+
+
+@router.post(
+    "/register/faculty/{faculty_id}",
+    summary="Register face images for a faculty member (Admin)",
+)
+async def register_faculty_face(
+    faculty_id: int,
+    images: List[UploadFile] = File(..., description="One or more face images (JPEG/PNG)"),
+    db: Session = Depends(get_db),
+    _=Depends(require_admin),
+):
+    """
+    Upload 1–10 face images for a faculty member. Each image must contain exactly one face.
+    The system extracts 128-d face encodings and stores them in the database.
+    """
+    service = FaceService(db)
+    image_data: list[tuple[bytes, str]] = []
+
+    for upload in images:
+        validate_image_upload(upload)
+        data = await read_upload_bytes(upload)
+        filename = upload.filename or f"face_fac_{faculty_id}.jpg"
+        image_data.append((data, filename))
+
+    return service.register_multiple_faculty_faces(faculty_id, image_data)
+
+
+@router.delete(
+    "/faculty/{faculty_id}",
+    summary="Delete all stored face encodings for a faculty member (Admin)",
+)
+def delete_faculty_face_encodings(
+    faculty_id: int,
+    db: Session = Depends(get_db),
+    _=Depends(require_admin),
+):
+    return FaceService(db).delete_faculty_encodings(faculty_id)

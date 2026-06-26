@@ -15,11 +15,11 @@ from app.services.student_service import StudentService
 router = APIRouter(prefix="/students", tags=["Students"])
 
 
-@router.post("", response_model=StudentOut, status_code=201, summary="Create student (Admin)")
+@router.post("", response_model=StudentOut, status_code=201, summary="Create student")
 def create_student(
     payload: StudentCreate,
     db: Session = Depends(get_db),
-    _=Depends(require_admin),
+    _=Depends(require_admin_or_faculty),
 ):
     return StudentService(db).create_student(payload)
 
@@ -73,12 +73,12 @@ def get_student(
     return StudentService(db).get_student(student_id)
 
 
-@router.put("/{student_id}", response_model=StudentOut, summary="Update student (Admin)")
+@router.put("/{student_id}", response_model=StudentOut, summary="Update student")
 def update_student(
     student_id: int,
     payload: StudentUpdate,
     db: Session = Depends(get_db),
-    _=Depends(require_admin),
+    _=Depends(require_admin_or_faculty),
 ):
     return StudentService(db).update_student(student_id, payload)
 

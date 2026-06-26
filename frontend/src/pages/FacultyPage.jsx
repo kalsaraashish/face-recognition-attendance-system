@@ -10,7 +10,8 @@ import Button from '../components/common/Button';
 import SearchInput from '../components/common/SearchInput';
 import Pagination from '../components/common/Pagination';
 import Badge from '../components/common/Badge';
-import { Plus, SlidersHorizontal, Pencil, Trash2 } from 'lucide-react';
+import { Plus, SlidersHorizontal, Pencil, Trash2, Camera } from 'lucide-react';
+import FaceRegisterModal from '../components/face/FaceRegisterModal';
 
 export const FacultyPage = () => {
   const { user } = useAuth();
@@ -41,6 +42,10 @@ export const FacultyPage = () => {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
+
+  // Face Registration Modal States
+  const [isFaceModalOpen, setIsFaceModalOpen] = useState(false);
+  const [faceFaculty, setFaceFaculty] = useState(null);
 
   useEffect(() => {
     fetchDepartments();
@@ -112,6 +117,11 @@ export const FacultyPage = () => {
     setIsDeleteOpen(true);
   };
 
+  const handleFaceRegisterClick = (fac) => {
+    setFaceFaculty(fac);
+    setIsFaceModalOpen(true);
+  };
+
   const tableHeaders = [
     '#',
     'Faculty Code',
@@ -120,6 +130,7 @@ export const FacultyPage = () => {
     'Email',
     'Mobile',
     'Status',
+    'Face',
     ...(isAdmin ? ['Actions'] : []),
   ];
 
@@ -226,6 +237,17 @@ export const FacultyPage = () => {
             <td className="px-6 py-4">
               <Badge status={fac.status} />
             </td>
+            <td className="px-6 py-4">
+              <span
+                className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${
+                  fac.has_face_registered
+                    ? 'bg-emerald-100 text-emerald-800'
+                    : 'bg-amber-100 text-amber-800'
+                }`}
+              >
+                {fac.has_face_registered ? 'Registered ✓' : 'Not Registered'}
+              </span>
+            </td>
             {isAdmin && (
               <td className="px-6 py-4 text-right">
                 <div className="flex items-center space-x-2.5">
@@ -235,6 +257,17 @@ export const FacultyPage = () => {
                     className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-100 hover:text-blue-600 transition-colors"
                   >
                     <Pencil className="h-4.5 w-4.5" />
+                  </button>
+                  <button
+                    onClick={() => handleFaceRegisterClick(fac)}
+                    title="Register Face"
+                    className={`rounded-lg p-1.5 transition-colors ${
+                      fac.has_face_registered
+                        ? 'text-slate-400 hover:bg-slate-100 hover:text-blue-600'
+                        : 'text-blue-600 hover:bg-blue-50 hover:text-blue-700 font-semibold'
+                    }`}
+                  >
+                    <Camera className="h-4.5 w-4.5" />
                   </button>
                   <button
                     onClick={() => handleDeleteClick(fac)}
@@ -288,6 +321,19 @@ export const FacultyPage = () => {
         })? This will also disable their linked login access.`}
         loading={deleteLoading}
       />
+      {/* Face Registration Modal */}
+      {faceFaculty && (
+        <FaceRegisterModal
+          isOpen={isFaceModalOpen}
+          onClose={() => {
+            setIsFaceModalOpen(false);
+            setFaceFaculty(null);
+          }}
+          faculty={faceFaculty}
+          type="faculty"
+          onRegisterSuccess={loadFaculty}
+        />
+      )}
     </div>
   );
 };

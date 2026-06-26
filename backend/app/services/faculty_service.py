@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session, joinedload
 
 from app.core.exceptions import ConflictError, NotFoundError
 from app.core.security import hash_password
+from app.models.face_encoding import FaceEncoding
 from app.models.faculty import Faculty
 from app.models.user import User, UserRole
 from app.schemas.faculty import FacultyCreate, FacultyListResponse, FacultyOut, FacultyUpdate
@@ -20,6 +21,14 @@ class FacultyService:
 
     def _query_with_dept(self):
         return self.db.query(Faculty).options(joinedload(Faculty.department))
+
+    def _to_out(self, faculty: Faculty) -> FacultyOut:
+        has_face = self.db.query(FaceEncoding).filter(
+            FaceEncoding.faculty_id == faculty.id
+        ).first() is not None
+        data = FacultyOut.model_validate(faculty)
+        data.has_face_registered = has_face
+        return data
 
     # ── Create ────────────────────────────────────────────────────
     def create_faculty(self, payload: FacultyCreate) -> FacultyOut:
@@ -52,7 +61,7 @@ class FacultyService:
         self.db.commit()
         self.db.refresh(faculty)
         logger.info(f"Faculty created: {faculty.faculty_code}")
-        return FacultyOut.model_validate(faculty)
+        return self._to_out(faculty)
 
     # ── Read One ──────────────────────────────────────────────────
     def get_faculty(self, faculty_id: int) -> FacultyOut:
@@ -63,7 +72,7 @@ class FacultyService:
         )
         if not faculty:
             raise NotFoundError("Faculty")
-        return FacultyOut.model_validate(faculty)
+        return self._to_out(faculty)
 
     # ── List ──────────────────────────────────────────────────────
     def list_faculty(
@@ -84,7 +93,7 @@ class FacultyService:
         faculties = query.offset((page - 1) * per_page).limit(per_page).all()
 
         return FacultyListResponse(
-            faculties=[FacultyOut.model_validate(f) for f in faculties],
+            faculties=[self._to_out(f) for f in faculties],
             total=total,
             page=page,
             per_page=per_page,
@@ -119,7 +128,7 @@ class FacultyService:
         self.db.commit()
         self.db.refresh(faculty)
         logger.info(f"Faculty updated: id={faculty_id}")
-        return FacultyOut.model_validate(faculty)
+        return self._to_out(faculty)
 
     # ── Delete ────────────────────────────────────────────────────
     def delete_faculty(self, faculty_id: int) -> dict:

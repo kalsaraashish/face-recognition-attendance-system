@@ -20,6 +20,7 @@ from app.core.exceptions import (
 )
 from app.models.face_encoding import FaceEncoding
 from app.models.student import Student
+from app.models.faculty import Faculty
 from app.schemas.attendance import RecognitionResult
 from app.utils.face_utils import (
     decode_image_bytes,
@@ -113,7 +114,7 @@ class FaceService:
         the best match (if any is within tolerance).
         """
         # Load all known encodings from DB
-        all_encodings = self.db.query(FaceEncoding).all()
+        all_encodings = self.db.query(FaceEncoding).filter(FaceEncoding.student_id.isnot(None)).all()
         if not all_encodings:
             raise FaceNotRecognizedError("No registered faces in the system")
 
@@ -148,3 +149,74 @@ class FaceService:
             enrollment_no=student.enrollment_no,
             confidence=round(confidence, 4),
         )
+
+    def register_faculty_face(self, faculty_id: int, image_bytes: bytes, filename: str) -> dict:
+        """
+        Process a single face image for a faculty, extract encoding, persist it,
+        and save the image file to disk.
+        """
+        # Verify faculty exists
+        faculty = self.db.query(Faculty).filter(Faculty.id == faculty_id).first()
+        if not faculty:
+            raise NotFoundError("Faculty")
+
+        # Decode image and extract face encoding
+        image_array = decode_image_bytes(image_bytes)
+        encoding = detect_and_encode_face(image_array)  # raises on 0 or 2+ faces
+
+        # Persist encoding as JSON
+        encoding_json = json.dumps(encoding.tolist())
+        face_enc = FaceEncoding(faculty_id=faculty_id, encoding_data=encoding_json)
+        self.db.add(face_enc)
+
+        # Save image file
+        save_path = (
+            Path(settings.UPLOAD_DIR)
+            / "faculty"
+            / str(faculty_id)
+            / filename
+        )
+        save_upload_file(image_bytes, save_path)
+
+        # Update faculty photo URL to the first uploaded image
+        if not faculty.photo_url:
+            faculty.photo_url = str(save_path)
+
+        self.db.commit()
+        logger.info(f"Face registered for faculty {faculty_id}, encoding id={face_enc.id}")
+        return {
+            "message": "Face registered successfully",
+            "faculty_id": faculty_id,
+            "encoding_id": face_enc.id,
+        }
+
+    def register_multiple_faculty_faces(
+        self, faculty_id: int, images: list[tuple[bytes, str]]
+    ) -> dict:
+        """Register multiple face images for a faculty in one call."""
+        results = []
+        for image_bytes, filename in images:
+            try:
+                result = self.register_faculty_face(faculty_id, image_bytes, filename)
+                results.append({"filename": filename, "status": "success", **result})
+            except (FaceNotDetectedError, MultipleFacesError) as exc:
+                results.append({"filename": filename, "status": "failed", "reason": str(exc.detail)})
+
+        registered = sum(1 for r in results if r["status"] == "success")
+        return {
+            "faculty_id": faculty_id,
+            "total_uploaded": len(images),
+            "registered": registered,
+            "results": results,
+        }
+
+    def delete_faculty_encodings(self, faculty_id: int) -> dict:
+        """Remove all stored face encodings for a faculty."""
+        deleted = (
+            self.db.query(FaceEncoding)
+            .filter(FaceEncoding.faculty_id == faculty_id)
+            .delete()
+        )
+        self.db.commit()
+        logger.info(f"Deleted {deleted} encodings for faculty {faculty_id}")
+        return {"deleted_count": deleted}

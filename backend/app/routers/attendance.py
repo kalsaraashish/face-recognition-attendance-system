@@ -19,6 +19,7 @@ from app.core.dependencies import (
     get_current_user,
     require_admin_or_faculty,
     require_any_role,
+    require_faculty,
 )
 from app.models.faculty import Faculty
 from app.models.user import User, UserRole
@@ -193,4 +194,134 @@ def delete_session(
     db.delete(session)
     db.commit()
     return {"message": f"Session {session_id} deleted"}
+
+
+@router.post(
+    "/faculty/mark/face",
+    summary="Mark daily faculty attendance via face recognition",
+)
+async def mark_faculty_by_face(
+    image: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_faculty),
+):
+    """
+    Verify the authenticated faculty's face and mark them PRESENT for today.
+    """
+    from app.core.config import settings
+    from app.core.exceptions import FaceNotRecognizedError, ConflictError
+    from app.models.face_encoding import FaceEncoding
+    from app.models.faculty_attendance import FacultyAttendance
+    from app.utils.face_utils import decode_image_bytes, detect_and_encode_face, find_best_match
+    import numpy as np
+    import json
+
+    faculty_id = _resolve_faculty_id(current_user, db)
+    faculty = db.query(Faculty).filter(Faculty.id == faculty_id).first()
+    if not faculty:
+        raise NotFoundError("Faculty profile not found")
+
+    # Check if already marked today
+    today = date.today()
+    existing = db.query(FacultyAttendance).filter(
+        FacultyAttendance.faculty_id == faculty_id,
+        FacultyAttendance.attendance_date == today
+    ).first()
+    if existing:
+        raise ConflictError("Attendance already marked for today")
+
+    # Load faculty's face encodings
+    encodings = db.query(FaceEncoding).filter(FaceEncoding.faculty_id == faculty_id).all()
+    if not encodings:
+        raise FaceNotRecognizedError("No registered face found for this faculty. Please contact Admin.")
+
+    # Decode and recognize
+    validate_image_upload(image)
+    image_bytes = await read_upload_bytes(image)
+    image_array = decode_image_bytes(image_bytes)
+    query_encoding = detect_and_encode_face(image_array)
+
+    known_encodings = []
+    for row in encodings:
+        try:
+            enc = np.array(json.loads(row.encoding_data), dtype=np.float64)
+            known_encodings.append(enc)
+        except Exception:
+            continue
+
+    if not known_encodings:
+        raise FaceNotRecognizedError("Failed to load registered face model")
+
+    match_index, confidence = find_best_match(
+        query_encoding, known_encodings, tolerance=settings.FACE_RECOGNITION_TOLERANCE
+    )
+
+    if match_index is None:
+        raise FaceNotRecognizedError("Face not recognized")
+
+    # Mark attendance
+    record = FacultyAttendance(
+        faculty_id=faculty_id,
+        attendance_date=today,
+        status="PRESENT"
+    )
+    db.add(record)
+    db.commit()
+    db.refresh(record)
+
+    return {
+        "id": record.id,
+        "message": "Faculty attendance marked successfully",
+        "faculty_name": faculty.name,
+        "marked_at": record.marked_at,
+        "status": record.status,
+    }
+
+
+@router.get(
+    "/faculty/today-status",
+    summary="Get today's attendance status for the logged-in faculty",
+)
+def get_faculty_today_status(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_faculty),
+):
+    from app.models.faculty_attendance import FacultyAttendance
+    faculty_id = _resolve_faculty_id(current_user, db)
+    today = date.today()
+    record = db.query(FacultyAttendance).filter(
+        FacultyAttendance.faculty_id == faculty_id,
+        FacultyAttendance.attendance_date == today
+    ).first()
+
+    return {
+        "marked": record is not None,
+        "marked_at": record.marked_at if record else None,
+        "status": record.status if record else None
+    }
+
+
+@router.get(
+    "/faculty/history",
+    summary="Get attendance history for the logged-in faculty",
+)
+def get_faculty_history(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_faculty),
+):
+    from app.models.faculty_attendance import FacultyAttendance
+    faculty_id = _resolve_faculty_id(current_user, db)
+    records = db.query(FacultyAttendance).filter(
+        FacultyAttendance.faculty_id == faculty_id
+    ).order_by(FacultyAttendance.attendance_date.desc()).all()
+
+    return [
+        {
+            "id": r.id,
+            "attendance_date": r.attendance_date,
+            "marked_at": r.marked_at,
+            "status": r.status
+        }
+        for r in records
+    ]
 
