@@ -58,12 +58,15 @@
 - **3 distinct roles**: Admin, Faculty, Student
 - JWT-based authentication with access + refresh tokens
 - Fine-grained endpoint authorization per role
+- **Extended Faculty Privileges**: Faculty members are authorized to create students, update student details, and register/reset student face profiles.
 
 ### 📅 Smart Attendance Management
 - Create attendance sessions per subject/department/semester
-- Mark attendance manually **or** via live camera face recognition
-- Duplicate attendance prevention
-- Real-time attendance confirmation with student name display
+- Mark student attendance manually **or** via live camera face recognition
+- **Faculty Daily Check-in**: Faculty members can mark their own daily presence once per day via face recognition (Admin registers the Faculty's face).
+- Duplicate check-in and duplicate attendance prevention
+- Real-time attendance confirmation with name display
+- Interactive webcam capture feeds for both student check-ins and faculty check-ins
 
 ### 📊 Reports & Analytics
 - Daily, Monthly, Student-wise, Department-wise reports
@@ -77,6 +80,7 @@
 - Auto token refresh on expiry
 - CORS protection
 - Input validation with Pydantic v2
+
 
 ---
 
@@ -253,12 +257,14 @@
 |---|:---:|:---:|:---:|
 | Login / Logout | ✅ | ✅ | ✅ |
 | View Dashboard | ✅ | ✅ | ✅ (own) |
-| Manage Students | ✅ CRUD | 👁️ Read | ❌ |
+| Manage Students | ✅ CRUD | ✅ Create/Update/Read | ❌ |
 | Manage Faculty | ✅ CRUD | 👁️ Read | ❌ |
 | Manage Departments | ✅ CRUD | 👁️ Read | 👁️ Read |
 | Manage Subjects | ✅ CRUD | 👁️ Read | 👁️ Read |
-| Register Student Face | ✅ | ❌ | ❌ |
+| Register Student Face | ✅ | ✅ | ❌ |
+| Register Faculty Face | ✅ | ❌ | ❌ |
 | Recognize Face | ✅ | ✅ | ❌ |
+| Faculty Daily Check-in | ❌ | ✅ | ❌ |
 | Create Attendance Session | ✅ | ✅ | ❌ |
 | Mark Attendance (manual) | ✅ | ✅ | ❌ |
 | Mark Attendance (face) | ✅ | ✅ | ❌ |
@@ -266,6 +272,7 @@
 | View Reports | ✅ | ✅ | ❌ |
 | Export PDF/Excel | ✅ | ✅ | ❌ |
 | Change Password | ✅ | ✅ | ✅ |
+
 
 ---
 
@@ -393,16 +400,18 @@ npm run dev
 |---|---|---|---|
 | `GET` | `/api/students` | List with pagination & filters | Admin, Faculty |
 | `GET` | `/api/students/{id}` | Get student by ID | Admin, Faculty |
-| `POST` | `/api/students` | Create student | Admin |
-| `PUT` | `/api/students/{id}` | Update student | Admin |
+| `POST` | `/api/students` | Create student | Admin, Faculty |
+| `PUT` | `/api/students/{id}` | Update student | Admin, Faculty |
 | `DELETE` | `/api/students/{id}` | Delete student | Admin |
 
 ### Face Recognition
 | Method | Endpoint | Description | Role |
 |---|---|---|---|
-| `POST` | `/api/face/register/{student_id}` | Upload & register face images | Admin |
+| `POST` | `/api/face/register/{student_id}` | Upload & register student face images | Admin, Faculty |
+| `DELETE` | `/api/face/{student_id}` | Remove stored student encodings | Admin, Faculty |
+| `POST` | `/api/face/register/faculty/{faculty_id}` | Upload & register faculty face images | Admin |
+| `DELETE` | `/api/face/faculty/{faculty_id}` | Remove stored faculty encodings | Admin |
 | `POST` | `/api/face/recognize` | Identify student from image | Admin, Faculty |
-| `DELETE` | `/api/face/{student_id}` | Remove stored encodings | Admin |
 
 ### Attendance
 | Method | Endpoint | Description | Role |
@@ -411,8 +420,12 @@ npm run dev
 | `GET` | `/api/attendance/sessions` | List sessions | Admin, Faculty |
 | `POST` | `/api/attendance/mark` | Manual attendance marking | Admin, Faculty |
 | `POST` | `/api/attendance/mark/face` | Face recognition attendance | Admin, Faculty |
+| `POST` | `/api/attendance/faculty/mark/face` | Faculty daily check-in via face recognition | Faculty |
+| `GET` | `/api/attendance/faculty/today-status` | Get faculty daily check-in status | Faculty |
+| `GET` | `/api/attendance/faculty/history` | Get faculty check-in logs | Faculty |
 | `GET` | `/api/attendance/sessions/{id}/records` | Session attendance records | Admin, Faculty |
 | `GET` | `/api/attendance/student/{id}/summary` | Student attendance summary | All (own for Student) |
+
 
 ### Reports
 | Method | Endpoint | Description | Role |
