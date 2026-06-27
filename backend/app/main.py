@@ -22,6 +22,7 @@ from app.routers import (
     departments,
     face_recognition,
     faculty,
+    leaves,
     reports,
     students,
     subjects,
@@ -105,6 +106,7 @@ def create_app() -> FastAPI:
     app.include_router(face_recognition.router, prefix=prefix)
     app.include_router(dashboard.router,        prefix=prefix)
     app.include_router(reports.router,          prefix=prefix)
+    app.include_router(leaves.router,           prefix=prefix)
 
     # ── Health check ──────────────────────────────────────────────
     @app.get("/health", tags=["Health"])

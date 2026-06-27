@@ -37,6 +37,10 @@ class Student(Base):
     attendance_records: Mapped[list["AttendanceRecord"]] = relationship(  # noqa: F821
         "AttendanceRecord", back_populates="student"
     )
+    leave_requests: Mapped[list["LeaveRequest"]] = relationship(  # noqa: F821
+        "LeaveRequest", back_populates="student", cascade="all, delete-orphan"
+    )
+
 
     @property
     def full_name(self) -> str:

@@ -19,6 +19,7 @@ export const StudentForm = ({
     mobile: '',
     department_id: '',
     semester: '1',
+    password: '',
     status: true,
   });
 
@@ -56,6 +57,7 @@ export const StudentForm = ({
         mobile: student.mobile || '',
         department_id: String(student.department_id || ''),
         semester: String(student.semester || '1'),
+        password: '', // Hidden/not editable during edit
         status: student.status !== undefined ? student.status : true,
       });
     }
@@ -89,6 +91,13 @@ export const StudentForm = ({
     if (!isRequired(formData.department_id)) tempErrors.department_id = 'Department is required';
     if (!isRequired(formData.semester)) tempErrors.semester = 'Semester is required';
 
+    // Password required only for creation
+    if (!student && !isRequired(formData.password)) {
+      tempErrors.password = 'Password is required for new student accounts';
+    } else if (!student && formData.password.length < 8) {
+      tempErrors.password = 'Password must be at least 8 characters';
+    }
+
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
   };
@@ -96,11 +105,18 @@ export const StudentForm = ({
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validate()) return;
-    onSubmit({
+    
+    const payload = {
       ...formData,
       department_id: Number(formData.department_id),
       semester: Number(formData.semester),
-    });
+    };
+    
+    // Don't send password if editing
+    if (student) {
+      delete payload.password;
+    }
+    onSubmit(payload);
   };
 
   return (
@@ -204,6 +220,18 @@ export const StudentForm = ({
           </select>
         </div>
       </div>
+
+      {!student && (
+        <Input
+          label="Password *"
+          type="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          error={errors.password}
+          placeholder="Enter student login password (min 8 chars)"
+        />
+      )}
 
       {student && (
         <div className="flex items-center space-x-2 py-2">

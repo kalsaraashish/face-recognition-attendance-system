@@ -12,6 +12,7 @@ import {
   BarChart3,
   Settings,
   X,
+  FileText,
 } from 'lucide-react';
 
 export const Sidebar = ({ isOpen, onClose }) => {
@@ -97,6 +98,10 @@ export const Sidebar = ({ isOpen, onClose }) => {
                   <GraduationCap className="h-5 w-5" />
                   <span>Students</span>
                 </NavLink>
+                <NavLink to="/leaves/manage" className={linkClass('/leaves/manage')} onClick={onClose}>
+                  <FileText className="h-5 w-5" />
+                  <span>Manage Leaves</span>
+                </NavLink>
                 {isAdmin && (
                   <>
                     <NavLink to="/faculty" className={linkClass('/faculty')} onClick={onClose}>
@@ -150,6 +155,10 @@ export const Sidebar = ({ isOpen, onClose }) => {
                 <NavLink to="/attendance/student/me" className={linkClass('/attendance/student/me')} onClick={onClose}>
                   <CalendarCheck className="h-5 w-5" />
                   <span>My Attendance</span>
+                </NavLink>
+                <NavLink to="/attendance/student/leaves" className={linkClass('/attendance/student/leaves')} onClick={onClose}>
+                  <FileText className="h-5 w-5" />
+                  <span>My Leaves</span>
                 </NavLink>
               </div>
             </div>

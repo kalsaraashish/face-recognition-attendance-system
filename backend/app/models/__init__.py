@@ -11,3 +11,5 @@ from app.models.face_encoding import FaceEncoding  # noqa: F401
 from app.models.attendance_session import AttendanceSession  # noqa: F401
 from app.models.attendance_record import AttendanceRecord, AttendanceStatus  # noqa: F401
 from app.models.faculty_attendance import FacultyAttendance  # noqa: F401
+from app.models.leave_request import LeaveRequest, LeaveStatus  # noqa: F401
+

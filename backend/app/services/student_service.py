@@ -9,9 +9,12 @@ from sqlalchemy import or_
 from sqlalchemy.orm import Session, joinedload
 
 from app.core.exceptions import ConflictError, NotFoundError
+from app.core.security import hash_password
 from app.models.student import Student
 from app.models.face_encoding import FaceEncoding
+from app.models.user import User, UserRole
 from app.schemas.student import StudentCreate, StudentListResponse, StudentOut, StudentUpdate
+
 
 
 class StudentService:
@@ -36,7 +39,21 @@ class StudentService:
         if self.db.query(Student).filter(Student.email == payload.email).first():
             raise ConflictError(f"Email '{payload.email}' already registered")
 
-        student = Student(**payload.model_dump())
+        # Create linked user account
+        user = User(
+            name=f"{payload.first_name} {payload.last_name}",
+            email=payload.email,
+            password_hash=hash_password(payload.password),
+            role=UserRole.STUDENT,
+            status=True,
+        )
+        self.db.add(user)
+        self.db.flush()
+
+        student_data = payload.model_dump()
+        student_data.pop("password", None)
+
+        student = Student(**student_data)
         self.db.add(student)
         self.db.commit()
         self.db.refresh(student)
@@ -101,13 +118,30 @@ class StudentService:
         if not student:
             raise NotFoundError("Student")
 
+        old_email = student.email
         updates = payload.model_dump(exclude_unset=True)
+        password = updates.pop("password", None)
+
         if "email" in updates and updates["email"] != student.email:
             if self.db.query(Student).filter(Student.email == updates["email"]).first():
                 raise ConflictError("Email already in use by another student")
 
         for field, value in updates.items():
             setattr(student, field, value)
+
+        # Sync user record
+        user = self.db.query(User).filter(User.email == old_email).first()
+        if user:
+            if "first_name" in updates or "last_name" in updates:
+                first_name = updates.get("first_name", student.first_name)
+                last_name = updates.get("last_name", student.last_name)
+                user.name = f"{first_name} {last_name}"
+            if "email" in updates:
+                user.email = updates["email"]
+            if "status" in updates:
+                user.status = updates["status"]
+            if password:
+                user.password_hash = hash_password(password)
 
         self.db.commit()
         self.db.refresh(student)
@@ -119,6 +153,12 @@ class StudentService:
         student = self.db.query(Student).filter(Student.id == student_id).first()
         if not student:
             raise NotFoundError("Student")
+
+        # Delete linked user record
+        user = self.db.query(User).filter(User.email == student.email).first()
+        if user:
+            self.db.delete(user)
+
         self.db.delete(student)
         self.db.commit()
         logger.info(f"Student deleted: id={student_id}")

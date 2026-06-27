@@ -63,3 +63,9 @@ export const getFacultyAttendanceHistory = async () => {
   const { data } = await api.get('/attendance/faculty/history');
   return data;
 };
+
+export const getStudentAttendanceRecords = async (studentId) => {
+  const { data } = await api.get(`/attendance/student/${studentId}/records`);
+  return data;
+};
+

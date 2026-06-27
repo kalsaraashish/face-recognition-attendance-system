@@ -13,6 +13,7 @@ class StudentCreate(BaseModel):
     mobile: Optional[str] = Field(None, max_length=15)
     department_id: int
     semester: int = Field(..., ge=1, le=8)
+    password: str = Field(..., min_length=8)
 
     model_config = {
         "json_schema_extra": {
@@ -24,6 +25,7 @@ class StudentCreate(BaseModel):
                 "mobile": "9876543210",
                 "department_id": 1,
                 "semester": 3,
+                "password": "Student@123",
             }
         }
     }
@@ -36,6 +38,7 @@ class StudentUpdate(BaseModel):
     mobile: Optional[str] = Field(None, max_length=15)
     department_id: Optional[int] = None
     semester: Optional[int] = Field(None, ge=1, le=8)
+    password: Optional[str] = Field(None, min_length=8)
     status: Optional[bool] = None
 
 

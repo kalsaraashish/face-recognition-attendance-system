@@ -22,6 +22,9 @@ import FaceAttendancePage from './pages/FaceAttendancePage';
 import ReportsPage from './pages/ReportsPage';
 import SettingsPage from './pages/SettingsPage';
 import NotFoundPage from './pages/NotFoundPage';
+import StudentAttendancePage from './pages/StudentAttendancePage';
+import StudentLeavePage from './pages/StudentLeavePage';
+import ManageLeavePage from './pages/ManageLeavePage';
 
 // Import App.css (cleared in setup)
 import './App.css';
@@ -140,6 +143,34 @@ export const App = () => {
               element={
                 <RoleRoute allowedRoles={adminFaculty}>
                   <ReportsPage />
+                </RoleRoute>
+              }
+            />
+
+            {/* STUDENT sections */}
+            <Route
+              path="attendance/student/me"
+              element={
+                <RoleRoute allowedRoles={['STUDENT']}>
+                  <StudentAttendancePage />
+                </RoleRoute>
+              }
+            />
+            <Route
+              path="attendance/student/leaves"
+              element={
+                <RoleRoute allowedRoles={['STUDENT']}>
+                  <StudentLeavePage />
+                </RoleRoute>
+              }
+            />
+
+            {/* Leave management: Admin & Faculty */}
+            <Route
+              path="leaves/manage"
+              element={
+                <RoleRoute allowedRoles={adminFaculty}>
+                  <ManageLeavePage />
                 </RoleRoute>
               }
             />

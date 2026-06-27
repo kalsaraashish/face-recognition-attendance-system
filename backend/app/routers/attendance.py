@@ -12,7 +12,7 @@ from datetime import date
 from typing import Optional
 
 from fastapi import APIRouter, Depends, File, Form, Query, UploadFile
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from app.core.database import get_db
 from app.core.dependencies import (
@@ -171,6 +171,56 @@ def student_summary(
         date_from=date_from,
         date_to=date_to,
     )
+
+
+@router.get(
+    "/student/{student_id}/records",
+    summary="Get detailed attendance records for a student",
+)
+def get_student_attendance_records(
+    student_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    # Students can only view their own attendance
+    if current_user.role == UserRole.STUDENT:
+        from app.models.student import Student as StudentModel
+        student = db.query(StudentModel).filter(StudentModel.email == current_user.email).first()
+        if not student or student.id != student_id:
+            raise ForbiddenError("You can only view your own attendance")
+
+    from app.models.attendance_record import AttendanceRecord
+    from app.models.attendance_session import AttendanceSession
+    from app.models.subject import Subject
+
+    records = (
+        db.query(AttendanceRecord)
+        .join(AttendanceRecord.session)
+        .options(
+            joinedload(AttendanceRecord.session).joinedload(AttendanceSession.subject),
+            joinedload(AttendanceRecord.session).joinedload(AttendanceSession.faculty),
+        )
+        .filter(AttendanceRecord.student_id == student_id)
+        .order_by(AttendanceSession.session_date.desc(), AttendanceSession.start_time.desc())
+        .all()
+    )
+
+    return [
+        {
+            "id": r.id,
+            "session_id": r.session_id,
+            "session_date": r.session.session_date,
+            "start_time": r.session.start_time,
+            "end_time": r.session.end_time,
+            "subject_name": r.session.subject.name if r.session.subject else "N/A",
+            "subject_code": r.session.subject.code if r.session.subject else "N/A",
+            "faculty_name": r.session.faculty.name if r.session.faculty else "N/A",
+            "status": r.status,
+            "marked_at": r.marked_at,
+        }
+        for r in records
+    ]
+
 
 
 @router.delete("/sessions/{session_id}", summary="Delete attendance session (Admin/Faculty)")
